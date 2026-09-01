@@ -1,0 +1,35 @@
+{
+  "name": "h-hr",
+  "version": "2.0.0",
+  "description": "نظام إدارة الموارد البشرية الاحترافي H-HR",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "setup-db": "node setup-db.js"
+  },
+  "keywords": [
+    "hr",
+    "human-resources",
+    "payroll",
+    "attendance"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.4.1",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "webpack-cli": "^7.2.3"
+  }
+}
