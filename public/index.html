@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>H-HR | نظام الموارد البشرية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F3EC; --surface:#FFFFFF; --surface-alt:#F0E9DC;
+  --ink:#241F1B; --ink-soft:#786D5F;
+  --sidebar-bg:#1C1613; --sidebar-bg2:#241C17; --sidebar-ink:#EFE6D8; --sidebar-ink-dim:#B4A691;
+  --accent:#C89B3C; --accent-dark:#9C7A2C;
+  --success:#4F7A5D; --success-bg:#E7F0E9;
+  --danger:#B14D36; --danger-bg:#F7E6E1;
+  --warn:#B8860B; --warn-bg:#F6EDDA;
+  --info:#3E6B8A; --info-bg:#E5EEF3;
+  --border:#E5DCC9; --shadow:0 10px 30px -12px rgba(28,22,17,.18); --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Tajawal',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4,.brand,.nav-link span,.btn,.kpi-label,.section-title{font-family:'Cairo',sans-serif;}
+button{font-family:inherit;} a{color:inherit;}
+::selection{background:var(--accent);color:#fff;}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px;}
+.hidden{display:none !important;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 20%,#2b221b 0%,#1C1613 55%,#14100D 100%);padding:24px;}
+.login-card{width:100%;max-width:400px;background:var(--surface);border-radius:20px;padding:36px 30px;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.06);}
+.login-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(145deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;color:#241a0a;font-family:'Cairo';font-weight:900;font-size:19px;margin:0 auto 16px;box-shadow:0 8px 18px -6px rgba(200,155,60,.6);}
+.login-title{text-align:center;font-size:22px;font-weight:800;margin:0 0 2px;}
+.login-sub{text-align:center;color:var(--ink-soft);font-size:14px;margin:0 0 26px;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--ink-soft);}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;background:#FBF9F4;font-size:15px;color:var(--ink);font-family:inherit;transition:.15s border-color;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:#fff;}
+.field-row{display:flex;gap:12px;} .field-row .field{flex:1;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 20px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:14.5px;transition:.15s transform,.15s box-shadow,.15s background;white-space:nowrap;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--accent);color:#241a0a;box-shadow:0 8px 18px -8px rgba(200,155,60,.55);}
+.btn-primary:hover{background:var(--accent-dark);}
+.btn-block{width:100%;}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-danger{background:var(--danger-bg);color:var(--danger);}
+.btn-danger:hover{background:var(--danger);color:#fff;}
+.btn-success{background:var(--success-bg);color:var(--success);}
+.btn-success:hover{background:var(--success);color:#fff;}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:8px;}
+.login-hint{margin-top:18px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
+.login-error{color:var(--danger);font-size:13.5px;text-align:center;margin-bottom:10px;font-weight:700;min-height:0;}
+
+/* SHELL */
+.app-shell{display:flex;min-height:100vh;}
+.sidebar{width:258px;flex:0 0 258px;background:linear-gradient(180deg,var(--sidebar-bg),var(--sidebar-bg2));color:var(--sidebar-ink);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;right:0;z-index:40;transition:transform .25s ease;}
+.sidebar-head{padding:20px 20px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08);}
+.sidebar-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(145deg,var(--accent),var(--accent-dark));display:flex;align-items:center;justify-content:center;font-weight:900;color:#241a0a;font-family:'Cairo';flex:0 0 auto;font-size:14px;}
+.brand{font-weight:800;font-size:16px;line-height:1.3;} .brand small{display:block;font-weight:500;font-size:11px;color:var(--sidebar-ink-dim);}
+.sidebar-nav{flex:1;overflow-y:auto;padding:10px 12px;}
+.nav-section{font-size:10.5px;color:var(--sidebar-ink-dim);font-weight:700;letter-spacing:.5px;margin:12px 10px 6px;text-transform:uppercase;}
+.nav-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:10px;color:var(--sidebar-ink-dim);text-decoration:none;font-size:13.8px;font-weight:600;cursor:pointer;margin-bottom:2px;border:none;background:none;width:100%;text-align:right;}
+.nav-link svg{width:18px;height:18px;flex:0 0 auto;}
+.nav-link:hover{background:rgba(255,255,255,.06);color:var(--sidebar-ink);}
+.nav-link.active{background:var(--accent);color:#241a0a;}
+.sidebar-foot{padding:12px 12px 16px;border-top:1px solid rgba(255,255,255,.08);}
+.user-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.05);margin-bottom:8px;}
+.user-avatar{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#241a0a;display:flex;align-items:center;justify-content:center;font-weight:800;font-family:'Cairo';flex:0 0 auto;}
+.user-meta{overflow:hidden;} .user-name{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .user-role{font-size:11px;color:var(--sidebar-ink-dim);}
+.main{flex:1;margin-right:258px;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(247,243,236,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:13px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.topbar-title{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px;}
+.topbar-right{display:flex;align-items:center;gap:8px;position:relative;}
+.clock-pill{background:var(--surface-alt);border:1px solid var(--border);border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:700;color:var(--ink-soft);}
+.branch-pill select{border:1px solid var(--border);border-radius:999px;padding:7px 12px;background:var(--surface-alt);font-family:inherit;font-weight:700;font-size:12.5px;}
+.hamburger{display:none;background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:8px;cursor:pointer;}
+.content{padding:22px 24px 60px;flex:1;}
+.sidebar-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:35;display:none;}
+.sidebar-backdrop.show{display:block;}
+
+.bell-btn{position:relative;background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:8px 9px;cursor:pointer;display:flex;}
+.bell-btn svg{width:18px;height:18px;}
+.bell-badge{position:absolute;top:-5px;left:-5px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;min-width:17px;height:17px;border-radius:999px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.notif-panel{position:absolute;top:50px;left:0;width:330px;max-height:440px;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 20px 45px -15px rgba(0,0,0,.35);z-index:60;padding:8px;}
+.notif-item{padding:10px 12px;border-radius:10px;cursor:pointer;border-bottom:1px solid var(--border);}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--surface-alt);}
+.notif-item.unread{background:#FBF3E3;}
+.notif-item .t{font-weight:700;font-size:13.2px;} .notif-item .b{font-size:12px;color:var(--ink-soft);margin-top:2px;} .notif-item .d{font-size:10.5px;color:var(--ink-soft);margin-top:5px;}
+.notif-empty{padding:26px 14px;text-align:center;color:var(--ink-soft);font-size:13px;}
+.notif-head{display:flex;justify-content:space-between;align-items:center;padding:6px 8px 10px;}
+.notif-head b{font-size:13.5px;}
+
+/* shared */
+.page-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.page-header h2{font-size:21px;margin:0 0 4px;} .page-header p{margin:0;color:var(--ink-soft);font-size:13.5px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px;}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:17px 19px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.kpi-card::before{content:'';position:absolute;top:0;right:0;width:5px;height:100%;background:var(--accent);}
+.kpi-card.warn::before{background:var(--warn);} .kpi-card.danger::before{background:var(--danger);} .kpi-card.success::before{background:var(--success);} .kpi-card.info::before{background:var(--info);}
+.kpi-label{font-size:12px;color:var(--ink-soft);font-weight:700;margin-bottom:6px;}
+.kpi-value{font-size:25px;font-weight:800;} .kpi-sub{font-size:11.5px;color:var(--ink-soft);margin-top:4px;}
+.section-title{font-size:15.5px;font-weight:800;margin:0 0 12px;display:flex;align-items:center;gap:8px;}
+.grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;} @media(max-width:900px){.grid-2{grid-template-columns:1fr;}}
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+thead th{text-align:right;font-size:11.5px;color:var(--ink-soft);font-weight:700;padding:10px 12px;border-bottom:2px solid var(--border);white-space:nowrap;}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:hover{background:var(--surface-alt);}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow);}
+.table-wrap table{margin:0;}
+.table-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;}
+.filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.filters select,.filters input{padding:9px 12px;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);font-size:13px;font-family:inherit;}
+.empty-state{padding:38px 20px;text-align:center;color:var(--ink-soft);}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:700;}
+.badge-success{background:var(--success-bg);color:var(--success);} .badge-danger{background:var(--danger-bg);color:var(--danger);}
+.badge-warn{background:var(--warn-bg);color:var(--warn);} .badge-muted{background:var(--surface-alt);color:var(--ink-soft);} .badge-info{background:var(--info-bg);color:var(--info);}
+.icon-btn-row{display:flex;gap:6px;flex-wrap:wrap;}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,15,10,.55);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:var(--surface);border-radius:16px;max-width:540px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);border-radius:16px 16px 0 0;}
+.modal-header h3{margin:0;font-size:16.5px;}
+.modal-close{background:var(--surface-alt);border:none;width:32px;height:32px;border-radius:9px;font-size:18px;cursor:pointer;color:var(--ink-soft);}
+.modal-body{padding:20px 22px 24px;} .modal-actions{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;}
+.toast-wrap{position:fixed;bottom:20px;left:20px;z-index:200;display:flex;flex-direction:column;gap:8px;max-width:90vw;}
+.toast{background:var(--ink);color:#fff;padding:12px 18px;border-radius:10px;font-size:13.3px;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;box-shadow:0 10px 25px -8px rgba(0,0,0,.4);}
+.toast.show{opacity:1;transform:translateY(0);} .toast-success{background:#2f5b3f;} .toast-error{background:#7d3226;}
+.clock-page-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:18px;} @media(max-width:820px){.clock-page-grid{grid-template-columns:1fr;}}
+.radar-card{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;text-align:center;}
+.radar-wrap{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.radar-ring{position:absolute;border-radius:50%;border:2px solid var(--accent);opacity:0;width:100%;height:100%;}
+.radar-btn.scanning .radar-ring{animation:radarPulse 1.8s ease-out infinite;}
+.radar-ring.r2{animation-delay:.5s;} .radar-ring.r3{animation-delay:1s;}
+@keyframes radarPulse{0%{transform:scale(.45);opacity:.9;}100%{transform:scale(1);opacity:0;}}
+.radar-btn{width:145px;height:145px;border-radius:50%;border:none;cursor:pointer;position:relative;background:radial-gradient(circle at 35% 30%,#e2b45a,var(--accent) 60%,var(--accent-dark) 100%);color:#241a0a;font-family:'Cairo';font-weight:800;font-size:14.5px;box-shadow:0 14px 30px -10px rgba(200,155,60,.6);display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;line-height:1.3;}
+.radar-btn:disabled{background:var(--surface-alt);color:var(--ink-soft);box-shadow:none;cursor:not-allowed;}
+.radar-btn.blocked{background:radial-gradient(circle at 35% 30%,#d98a76,var(--danger) 80%);}
+.radar-btn:active:not(:disabled){transform:scale(.96);}
+.clock-status-line{font-size:13px;color:var(--ink-soft);margin-top:4px;max-width:260px;}
+.clock-times{display:flex;gap:22px;margin-top:16px;}
+.clock-time-item{text-align:center;} .clock-time-item .t{font-size:19px;font-weight:800;font-family:'Cairo';} .clock-time-item .l{font-size:11px;color:var(--ink-soft);}
+@media (prefers-reduced-motion: reduce){.radar-btn.scanning .radar-ring{animation:none;opacity:.5;}}
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.week-nav .label{font-weight:700;font-size:14px;background:var(--surface-alt);padding:8px 16px;border-radius:9px;}
+.sched-grid{width:100%;border-collapse:collapse;}
+.sched-grid th{background:var(--surface-alt);padding:9px 6px;font-size:11.5px;text-align:center;border:1px solid var(--border);}
+.sched-grid td{border:1px solid var(--border);padding:6px;text-align:center;vertical-align:top;min-width:104px;}
+.sched-cell{border-radius:8px;padding:8px 6px;background:var(--surface-alt);cursor:pointer;font-size:11.5px;min-height:50px;display:flex;flex-direction:column;justify-content:center;gap:2px;}
+.sched-cell:hover{outline:2px solid var(--accent);} .sched-cell .st{font-weight:800;font-size:12px;}
+.sched-cell.empty{color:var(--ink-soft);font-weight:700;font-size:17px;} .sched-cell.today{outline:2px solid var(--accent);}
+.summary-block{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px;}
+.summary-block.total{font-weight:800;font-size:16.5px;border-bottom:none;border-top:2px solid var(--ink);margin-top:6px;padding-top:14px;}
+.pos{color:var(--success);} .neg{color:var(--danger);}
+.info-box{background:var(--info-bg);color:var(--info);border-radius:10px;padding:12px 14px;font-size:12.8px;line-height:1.9;margin-bottom:14px;}
+.warn-box{background:var(--warn-bg);color:#7a5c0a;border-radius:10px;padding:12px 14px;font-size:12.8px;line-height:1.9;margin-bottom:14px;}
+@media(max-width:980px){
+  .sidebar{transform:translateX(100%);box-shadow:-10px 0 30px rgba(0,0,0,.3);} .sidebar.open{transform:translateX(0);}
+  .main{margin-right:0;} .hamburger{display:inline-flex;align-items:center;justify-content:center;}
+  .content{padding:16px 12px 50px;} .topbar{padding:11px 12px;} .kpi-grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr));}
+  .notif-panel{left:8px;right:8px;width:auto;}
+}
+@media print{ .sidebar,.topbar,.hamburger,.no-print{display:none !important;} .main{margin:0;} .content{padding:0;} body{background:#fff;} }
+</style>
+</head>
+<body>
+<div id="app"><div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#1C1613;color:#EFE6D8;font-family:'Cairo',sans-serif;font-weight:700;">جارٍ التحميل...</div></div>
+<div id="modal-backdrop" class="modal-backdrop hidden">
+  <div class="modal"><div class="modal-header"><h3 id="modal-title"></h3><button class="modal-close" onclick="closeModal()">×</button></div><div class="modal-body" id="modal-body"></div></div>
+</div>
+<div id="toast-wrap" class="toast-wrap"></div>
+
+<script>
+/* ============================================================
+   H-HR — نظام موارد بشرية 
+   Auth (PBKDF2 hashed), branches/RBAC, geofenced attendance with
+   device-binding, single-session enforcement, in-app notifications,
+   security alerts, audit log, leave management, auto payroll close.
+   Persisted via window.storage (shared). See in-app Settings notes
+   about the realistic security model of a browser-based system.
+   ============================================================ */
+
+const STORAGE_KEY = 'hhr_db_v2';
+let DB=null, currentUser=null, view='dashboard';
+let scheduleWeekStart=null, myScheduleWeekStart=null, payrollMonth=null;
+let attMonth=null, salaryMonth=null, summaryMonth=null, empAttMonth=null;
+let txFilters={employee:'all',month:null,type:'all'};
+let taskFilters={employee:'all',status:'all'};
+let discFilters={employee:'all'};
+let attFilters={employee:'all',month:null};
+let leaveFilters={employee:'all',status:'all'};
+let activeBranchFilter=null; // super_admin only, null = all branches
+let pollTimer=null;
+let lastNotifCount=0, lastAlertCount=0;
+let notifPanelOpen=false, alertPanelOpen=false;
+
+/* ---------------- utils ---------------- */
+function pad(n){ return n<10?'0'+n:''+n; }
+function todayISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function nowHM(){ const d=new Date(); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+function isoFromDate(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function addDays(dateStr,n){ const d=new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+n); return isoFromDate(d); }
+function uid(){ return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():'id-'+Date.now()+'-'+Math.random().toString(36).slice(2); }
+function esc(s){ if(s===undefined||s===null) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtMoney(n){ n=Number(n)||0; return n.toLocaleString('en-US',{maximumFractionDigits:0})+' ج.م'; }
+const WEEKDAYS_AR=['السبت','الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const MONTHS_AR=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+function weekdayAr(dateStr){ const d=new Date(dateStr+'T00:00:00'); return WEEKDAYS_AR[(d.getDay()+1)%7]; }
+function fmtDateAr(dateStr){ if(!dateStr) return ''; const d=new Date(dateStr+'T00:00:00'); return weekdayAr(dateStr)+'، '+d.getDate()+' '+MONTHS_AR[d.getMonth()]+' '+d.getFullYear(); }
+function fmtDateShort(dateStr){ if(!dateStr) return ''; const d=new Date(dateStr+'T00:00:00'); return d.getDate()+' '+MONTHS_AR[d.getMonth()]; }
+function monthLabel(monthKey){ if(!monthKey) return ''; const [y,m]=monthKey.split('-'); return MONTHS_AR[parseInt(m,10)-1]+' '+y; }
+function currentMonthKey(){ return todayISO().slice(0,7); }
+function prevMonthKey(monthKey){ const [y,m]=monthKey.split('-').map(Number); const d=new Date(y,m-2,1); return d.getFullYear()+'-'+pad(d.getMonth()+1); }
+function getWeekStart(dateStr){ const d=new Date(dateStr+'T00:00:00'); const offset=(d.getDay()+1)%7; d.setDate(d.getDate()-offset); return isoFromDate(d); }
+function haversine(lat1,lon1,lat2,lon2){ const R=6371000,toRad=x=>x*Math.PI/180; const dLat=toRad(lat2-lat1),dLon=toRad(lon2-lon1); const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); }
+function hourlyRate(emp){ return (Number(emp.monthlySalary)||0)/30/8; }
+function timeToMinutes(t){ if(!t) return null; const [h,m]=t.split(':').map(Number); return h*60+m; }
+function hoursBetween(inT,outT){ const a=timeToMinutes(inT),b=timeToMinutes(outT); if(a===null||b===null) return 0; let diff=b-a; if(diff<0) diff+=24*60; return Math.round((diff/60)*100)/100; }
+function timeAgo(iso){ const diff=Date.now()-new Date(iso).getTime(); const m=Math.floor(diff/60000); if(m<1) return 'الآن'; if(m<60) return 'منذ '+m+' د'; const h=Math.floor(m/60); if(h<24) return 'منذ '+h+' س'; return 'منذ '+Math.floor(h/24)+' يوم'; }
+
+/* ---------------- crypto: password hashing (PBKDF2-SHA256, salted) ---------------- */
+function bytesToHex(bytes){ return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+function hexToBytes(hex){ const arr=new Uint8Array(hex.length/2); for(let i=0;i<arr.length;i++) arr[i]=parseInt(hex.substr(i*2,2),16); return arr; }
+function randomSaltHex(){ const arr=new Uint8Array(16); crypto.getRandomValues(arr); return bytesToHex(arr); }
+async function hashPassword(password,saltHex){
+  const enc=new TextEncoder();
+  const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(password),{name:'PBKDF2'},false,['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:hexToBytes(saltHex),iterations:100000,hash:'SHA-256'},keyMaterial,256);
+  return bytesToHex(new Uint8Array(bits));
+}
+async function makeCredential(plainPassword){ const salt=randomSaltHex(); const passwordHash=await hashPassword(plainPassword,salt); return {salt,passwordHash}; }
+
+/* ---------------- device signature (best-effort, browser-based) ---------------- */
+function deviceSignature(){
+  const ua=navigator.userAgent||'', plat=navigator.platform||'';
+  const scr=screen.width+'x'+screen.height+'x'+(window.devicePixelRatio||1);
+  const lang=navigator.language||'', tz=(Intl.DateTimeFormat().resolvedOptions().timeZone)||'';
+  const raw=ua+'|'+plat+'|'+scr+'|'+lang+'|'+tz;
+  let h=0; for(let i=0;i<raw.length;i++){ h=(h*31+raw.charCodeAt(i))|0; }
+  return 'dev_'+Math.abs(h).toString(36)+'_'+scr;
+}
+
+/* ---------------- storage ---------------- */
+function defaultSettings(){ return { companyName:'Mura', overtimeRate:1.5, lateGraceMinutes:15, allowedUnpaidAbsences:0, payrollAutoCloseDay:3, defaultAnnualLeave:21 }; }
+async function defaultDB(){
+  const cred=await makeCredential('admin123');
+  const branchId=uid();
+  return {
+    schemaVersion:2,
+    settings: defaultSettings(),
+    branches: [{ id:branchId, name:'الفرع الرئيسي', address:'', lat:null, lng:null, radius:100 }],
+    employees: [{ id:uid(), username:'admin', salt:cred.salt, passwordHash:cred.passwordHash, name:'مدير النظام', role:'super_admin', branchId:null, position:'مدير عام', phone:'', monthlySalary:0, hireDate:todayISO(), active:true, annualLeaveBalance:0, registeredDevice:null, activeSessionToken:null, activeSessionAt:null, failedAttempts:0, lockedUntil:null }],
+    attendance:[], schedules:[], tasks:[], transactions:[], disciplinary:[], payrollClosings:[], leaveRequests:[],
+    notifications:[], securityAlerts:[], auditLog:[]
+  };
+}
+async function api(url, options = {}) {
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    },
+    ...options
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || data.success === false) {
+    throw new Error(data.error || data.message || 'حدث خطأ في الاتصال بالخادم');
+  }
+
+  return data;
+}
+
+async function boot(){
+
+  try {
+
+    console.log("🔄 Loading H-HR database from server...");
+
+    const response = await fetch("/api/db", {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      },
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Server returned HTTP ${response.status}`
+      );
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !result.db) {
+      throw new Error(
+        result.error || "Invalid database response"
+      );
+    }
+
+    DB = result.db;
+
+    console.log("✅ Database loaded from PostgreSQL");
+
+  } catch (error) {
+
+    console.error(
+      "❌ Failed to load database from server:",
+      error
+    );
+
+    DB = null;
+
+    toast(
+      "تعذر الاتصال بالخادم وقاعدة البيانات",
+      "error"
+    );
+
+    return;
+  }
+
+  // =========================================
+  // ENSURE ARRAYS EXIST
+  // =========================================
+
+  DB.branches = DB.branches || [];
+
+  DB.employees = DB.employees || [];
+
+  DB.attendance = DB.attendance || [];
+
+  DB.schedules = DB.schedules || [];
+
+  DB.tasks = DB.tasks || [];
+
+  DB.transactions = DB.transactions || [];
+
+  DB.disciplinary = DB.disciplinary || [];
+
+  DB.payrollClosings =
+    DB.payrollClosings || [];
+
+  DB.leaveRequests =
+    DB.leaveRequests || [];
+
+  DB.notifications =
+    DB.notifications || [];
+
+  DB.securityAlerts =
+    DB.securityAlerts || [];
+
+  DB.auditLog =
+    DB.auditLog || [];
+
+  DB.settings = Object.assign(
+    defaultSettings(),
+    DB.settings || {}
+  );
+
+  // =========================================
+  // RENDER APPLICATION
+  // =========================================
+
+  render();
+}
+async function persist(){
+
+  try {
+
+    const response = await fetch("/api/db", {
+
+      method: "PUT",
+
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+      },
+
+      body: JSON.stringify(DB)
+
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+
+      throw new Error(
+        result.error ||
+        `Server returned HTTP ${response.status}`
+      );
+
+    }
+
+    console.log(
+      "✅ Database saved to PostgreSQL"
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "❌ Database save error:",
+      error
+    );
+
+    toast(
+      "حدث خطأ أثناء حفظ البيانات: " +
+      error.message,
+      "error"
+    );
+
+    return false;
+  }
+}
+async function silentReload(){
+
+  try {
+
+    const response = await fetch("/api/db", {
+
+      method: "GET",
+
+      headers: {
+        "Accept": "application/json"
+      },
+
+      cache: "no-store"
+
+    });
+
+    if (!response.ok) {
+
+      throw new Error(
+        `Server returned HTTP ${response.status}`
+      );
+
+    }
+
+    const result = await response.json();
+
+    if (!result.success || !result.db) {
+
+      throw new Error(
+        result.error ||
+        "Invalid database response"
+      );
+
+    }
+
+    DB = result.db;
+
+    console.log(
+      "✅ Database reloaded from PostgreSQL"
+    );
+
+    return true;
+
+  } catch (error) {
+
+    console.error(
+      "❌ Reload error:",
+      error
+    );
+
+    return false;
+  }
+}
+async function reloadDB() {
+  const ok = await silentReload();
+
+  if (ok) {
+    toast('تم تحديث البيانات من الخادم', 'success');
+    render();
+  } else {
+    toast('تعذر تحديث البيانات من الخادم', 'error');
+  }
+}
+
+/* ---------------- audit / notifications / alerts ---------------- */
+function logAudit(action,detail){ DB.auditLog.unshift({ id:uid(), actorId:currentUser?currentUser.id:null, actorName:currentUser?currentUser.name:'نظام', action, detail, createdAt:new Date().toISOString() }); if(DB.auditLog.length>500) DB.auditLog.length=500; }
+function pushNotification(employeeId,title,body,type){ DB.notifications.unshift({ id:uid(), employeeId, title, body, type, createdAt:new Date().toISOString(), read:false }); if(DB.notifications.length>1000) DB.notifications.length=1000; }
+function pushSecurityAlert(type,{employeeId=null,username=null,branchId=null,detail='',severity='medium'}={}){
+  DB.securityAlerts.unshift({ id:uid(), type, employeeId, username, branchId, detail, severity, createdAt:new Date().toISOString(), acknowledged:false });
+  if(DB.securityAlerts.length>500) DB.securityAlerts.length=500;
+}
+
+/* ---------------- auth ---------------- */
+function isAdminRole(role){ return role==='super_admin'||role==='branch_admin'; }
+async function doLogin(){
+  const username=document.getElementById('login-user').value.trim();
+  const password=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('login-error'); errEl.textContent='';
+  await silentReload();
+  const emp=DB.employees.find(e=>e.username===username);
+  if(!emp || emp.active===false){ errEl.textContent='اسم المستخدم أو كلمة المرور غير صحيحة'; pushSecurityAlert('failed_login',{username,detail:'محاولة دخول باسم مستخدم غير موجود أو معطل'}); await persist(); return; }
+  if(emp.lockedUntil && Date.now()<emp.lockedUntil){
+    const mins=Math.ceil((emp.lockedUntil-Date.now())/60000);
+    errEl.textContent='الحساب مقفول مؤقتًا بسبب محاولات دخول فاشلة متكررة، حاول بعد '+mins+' دقيقة';
+    return;
+  }
+  const hash=await hashPassword(password,emp.salt);
+  if(hash!==emp.passwordHash){
+    emp.failedAttempts=(emp.failedAttempts||0)+1;
+    if(emp.failedAttempts>=5){ emp.lockedUntil=Date.now()+15*60*1000; emp.failedAttempts=0; pushSecurityAlert('account_locked',{employeeId:emp.id,username:emp.username,branchId:emp.branchId,detail:'تم قفل الحساب مؤقتًا بعد 5 محاولات دخول فاشلة',severity:'high'}); }
+    else{ pushSecurityAlert('failed_login',{employeeId:emp.id,username:emp.username,branchId:emp.branchId,detail:'كلمة مرور خاطئة (محاولة '+emp.failedAttempts+'/5)'}); }
+    await persist();
+    errEl.textContent='اسم المستخدم أو كلمة المرور غير صحيحة';
+    return;
+  }
+  // success
+  const hadActiveSession = !!emp.activeSessionToken && emp.activeSessionAt && (Date.now()-emp.activeSessionAt < 12*60*60*1000);
+  emp.failedAttempts=0; emp.lockedUntil=null;
+  const token=uid();
+  emp.activeSessionToken=token; emp.activeSessionAt=Date.now(); emp.activeLoginDeviceSig=deviceSignature();
+  if(hadActiveSession){ pushSecurityAlert('session_takeover',{employeeId:emp.id,username:emp.username,branchId:emp.branchId,detail:'تم تسجيل دخول جديد بينما كانت هناك جلسة نشطة بالفعل — سيتم إنهاء الجلسة القديمة تلقائيًا',severity:'medium'}); }
+  logAudit('تسجيل دخول','دخل '+emp.name+' ('+emp.username+')');
+  await persist();
+  currentUser=Object.assign({},emp,{sessionToken:token});
+  view = isAdminRole(emp.role) ? 'dashboard' : 'emp-dashboard';
+  lastNotifCount=DB.notifications.filter(n=>n.employeeId===emp.id).length;
+  lastAlertCount=DB.securityAlerts.filter(a=>!a.acknowledged).length;
+  if(isAdminRole(emp.role)) await autoClosePendingPayrolls();
+  render();
+}
+async function logout(){
+  if(currentUser){
+    const emp=DB.employees.find(e=>e.id===currentUser.id);
+    if(emp){ emp.activeSessionToken=null; logAudit('تسجيل خروج',emp.name); await persist(); }
+  }
+  currentUser=null; stopPolling(); render();
+}
+function goto(v){ view=v; render(); closePanels(); const sb=document.getElementById('sidebar'); if(sb) sb.classList.remove('open'); const bd=document.getElementById('sidebar-backdrop'); if(bd) bd.classList.remove('show'); }
+
+/* ---------------- polling: session validity + notifications ---------------- */
+function startPolling(){
+  stopPolling();
+  pollTimer=setInterval(async ()=>{
+    if(!currentUser) return;
+    const ok=await silentReload(); if(!ok) return;
+    const emp=DB.employees.find(e=>e.id===currentUser.id);
+    if(!emp || emp.active===false){ toast('تم إلغاء تفعيل حسابك','error'); currentUser=null; stopPolling(); render(); return; }
+    if(emp.activeSessionToken!==currentUser.sessionToken){
+      toast('تم تسجيل الدخول لحسابك من جهاز آخر، تم إنهاء هذه الجلسة','error');
+      currentUser=null; stopPolling(); render(); return;
+    }
+    // notifications for employee
+    const myNotifs=DB.notifications.filter(n=>n.employeeId===currentUser.id);
+    if(myNotifs.length>lastNotifCount){
+      const fresh=myNotifs.slice(0,myNotifs.length-lastNotifCount);
+      fireBrowserNotifications(fresh);
+    }
+    lastNotifCount=myNotifs.length;
+    // security alerts for admins
+    if(isAdminRole(currentUser.role)){
+      const scoped = currentUser.role==='super_admin' ? DB.securityAlerts : DB.securityAlerts.filter(a=>a.branchId===currentUser.branchId||a.employeeId===currentUser.id);
+      const unresolved=scoped.filter(a=>!a.acknowledged);
+      if(unresolved.length>lastAlertCount){ fireBrowserNotifications(unresolved.slice(0,unresolved.length-lastAlertCount).map(a=>({title:'⚠️ تنبيه أمني',body:a.detail}))); }
+      lastAlertCount=unresolved.length;
+    }
+    updateBellBadges();
+  },60000);
+}
+function stopPolling(){ if(pollTimer){ clearInterval(pollTimer); pollTimer=null; } }
+function fireBrowserNotifications(items){
+  if(!('Notification' in window) || Notification.permission!=='granted') return;
+  items.slice(0,3).forEach(n=>{ try{ new Notification(n.title,{ body:n.body, tag:'hhr-'+Date.now()+Math.random() }); }catch(e){} });
+}
+function requestNotifPermission(){
+  if(!('Notification' in window)){ toast('المتصفح لا يدعم الإشعارات الفورية','error'); return; }
+  Notification.requestPermission().then(p=>{ if(p==='granted') toast('تم تفعيل الإشعارات الفورية','success'); render(); });
+}
+function updateBellBadges(){
+  const nb=document.getElementById('notif-badge'); const ab=document.getElementById('alert-badge');
+  if(nb){ const c=DB.notifications.filter(n=>n.employeeId===currentUser.id && !n.read).length; nb.textContent=c>9?'9+':c; nb.classList.toggle('hidden',c===0); }
+  if(ab){ const scoped=currentUser.role==='super_admin'?DB.securityAlerts:DB.securityAlerts.filter(a=>a.branchId===currentUser.branchId); const c=scoped.filter(a=>!a.acknowledged).length; ab.textContent=c>9?'9+':c; ab.classList.toggle('hidden',c===0); }
+}
+function closePanels(){ notifPanelOpen=false; alertPanelOpen=false; const np=document.getElementById('notif-panel'); if(np) np.remove(); const ap=document.getElementById('alert-panel'); if(ap) ap.remove(); }
+
+/* ---------------- render root ---------------- */
+function render(){
+  const app=document.getElementById('app');
+  if(!currentUser){ app.innerHTML=renderLogin(); return; }
+  app.innerHTML=renderShell();
+  mountView();
+  startPolling();
+  updateClockPill();
+  if(!window.__clockPillTimer){ window.__clockPillTimer=setInterval(updateClockPill,20000); }
+}
+function updateClockPill(){ const el=document.getElementById('clock-pill'); if(!el) return; const d=new Date(); el.textContent=fmtDateAr(todayISO())+' · '+pad(d.getHours())+':'+pad(d.getMinutes()); }
+
+function renderLogin(){
+  const seeded = DB && DB.employees.length===1 && DB.employees[0].username==='admin';
+  return `
+  <div class="login-screen"><div class="login-card">
+    <div class="login-logo">H-HR</div>
+    <h1 class="login-title">H-HR</h1>
+    <p class="login-sub"> نظام الموارد البشرية </p>
+    <div class="login-error" id="login-error"></div>
+    <div class="field"><label>اسم المستخدم</label><input id="login-user" type="text" autocomplete="username" placeholder="اسم المستخدم"></div>
+    <div class="field"><label>كلمة المرور</label><input id="login-pass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn btn-primary btn-block" onclick="doLogin()">تسجيل الدخول</button>
+  </div></div>`;
+}
+
+function renderShell(){
+  const role=currentUser.role;
+  const adminGroups=[
+    ['لوحة القيادة',[['dashboard','grid','لوحة التحكم']]],
+    ['الموظفون والفروع', role==='super_admin' ? [['employees','users','الموظفون'],['branches','pin','الفروع']] : [['employees','users','الموظفون']]],
+    ['العمليات اليومية',[['attendance','clock','الحضور والانصراف'],['schedules','cal','الجداول الأسبوعية'],['tasks','check','المهام'],['leaves','leaf','الإجازات']]],
+    ['الشؤون المالية',[['transactions','cash','السلف والخصومات'],['disciplinary','alert','الجزاءات التأديبية'],['payroll','file','تقفيل المرتبات']]],
+    ['الأمان والتقارير', role==='super_admin' ? [['security','shield','التنبيهات الأمنية'],['audit','list','سجل العمليات'],['settings','gear','الإعدادات']] : [['security','shield','التنبيهات الأمنية'],['settings','gear','الإعدادات']]]
+  ];
+  const empGroups=[
+    ['الرئيسية',[['emp-dashboard','grid','الرئيسية'],['emp-clock','clock','تسجيل الحضور']]],
+    ['سجلاتي',[['emp-schedule','cal','جدولي الأسبوعي'],['emp-tasks','check','مهامي'],['emp-leave','leaf','إجازاتي'],['emp-salary','cash','راتبي'],['emp-attendance','clock','سجل حضوري'],['emp-disciplinary','alert','الجزاءات'],['emp-summary','file','مراجعة الشهر']]]
+  ];
+  const groups = isAdminRole(role) ? adminGroups : empGroups;
+  const titleMap={}; groups.forEach(g=>g[1].forEach(l=>titleMap[l[0]]=l[2]));
+  const navHtml=groups.map(g=>`<div class="nav-section">${g[0]}</div>`+g[1].map(l=>`<button class="nav-link ${view===l[0]?'active':''}" onclick="goto('${l[0]}')">${icon(l[1])}<span>${l[2]}</span></button>`).join('')).join('');
+  const initials=currentUser.name?currentUser.name.trim().slice(0,1):'?';
+  const roleLabel = role==='super_admin'?'مدير عام':role==='branch_admin'?'مدير فرع':esc(currentUser.position||'موظف');
+  const branch = DB.branches.find(b=>b.id===currentUser.branchId);
+  let branchControl='';
+  if(role==='super_admin'){
+    branchControl=`<span class="branch-pill"><select onchange="activeBranchFilter=this.value||null;render()">
+      <option value="">كل الفروع</option>${DB.branches.map(b=>`<option value="${b.id}" ${activeBranchFilter===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}
+    </select></span>`;
+  } else if(branch){ branchControl=`<span class="clock-pill">${esc(branch.name)}</span>`; }
+  return `
+  <div class="app-shell">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-head"><div class="sidebar-logo">H</div><div class="brand">H-HR<small>${esc(DB.settings.companyName)}</small></div></div>
+      <nav class="sidebar-nav">${navHtml}</nav>
+      <div class="sidebar-foot">
+        <div class="user-chip"><div class="user-avatar">${esc(initials)}</div><div class="user-meta"><div class="user-name">${esc(currentUser.name)}</div><div class="user-role">${roleLabel}</div></div></div>
+        <button class="nav-link" onclick="openChangePassword()">${icon('key')}<span>تغيير كلمة المرور</span></button>
+        <button class="nav-link" onclick="logout()">${icon('logout')}<span>تسجيل الخروج</span></button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="hamburger" onclick="toggleSidebar()">${icon('menu')}</button>
+          <div class="topbar-title">${titleMap[view]||''}</div>
+        </div>
+        <div class="topbar-right">
+          ${branchControl}
+          <span class="clock-pill" id="clock-pill"></span>
+          ${isAdminRole(role)?`<div style="position:relative;"><button class="bell-btn" onclick="toggleAlertPanel(event)">${icon('shield')}<span class="bell-badge hidden" id="alert-badge">0</span></button></div>`:''}
+          <div style="position:relative;"><button class="bell-btn" onclick="toggleNotifPanel(event)">${icon('bell')}<span class="bell-badge hidden" id="notif-badge">0</span></button></div>
+          ${isAdminRole(role)?`<button class="btn btn-ghost btn-sm no-print" onclick="reloadDB()">${icon('refresh')} تحديث</button>`:''}
+        </div>
+      </div>
+      <div class="content" id="view-content"></div>
+    </div>
+  </div>`;
+}
+function toggleSidebar(){ document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebar-backdrop').classList.toggle('show'); }
+
+function toggleNotifPanel(ev){
+  ev.stopPropagation();
+  const existing=document.getElementById('notif-panel'); if(existing){ existing.remove(); return; }
+  closePanels();
+  const mine=DB.notifications.filter(n=>n.employeeId===currentUser.id).slice(0,25);
+  const askPerm = ('Notification' in window && Notification.permission==='default');
+  const html=`<div class="notif-panel" id="notif-panel" onclick="event.stopPropagation()">
+    <div class="notif-head"><b>الإشعارات</b>${mine.length?`<button class="btn btn-ghost btn-sm" onclick="markAllNotifRead()">تعليم الكل كمقروء</button>`:''}</div>
+    ${askPerm?`<div class="info-box" style="margin:0 6px 8px;">فعّل الإشعارات الفورية على المتصفح لتصلك تنبيهات لحظية أثناء فتح النظام. <button class="btn btn-primary btn-sm" style="margin-top:6px;" onclick="requestNotifPermission()">تفعيل</button></div>`:''}
+    ${mine.length?mine.map(n=>`<div class="notif-item ${n.read?'':'unread'}" onclick="markNotifRead('${n.id}')"><div class="t">${esc(n.title)}</div><div class="b">${esc(n.body)}</div><div class="d">${timeAgo(n.createdAt)}</div></div>`).join(''):`<div class="notif-empty">لا توجد إشعارات بعد</div>`}
+  </div>`;
+  document.querySelector('.topbar-right').insertAdjacentHTML('beforeend',html);
+  setTimeout(()=>document.addEventListener('click',closePanels,{once:true}),0);
+}
+async function markNotifRead(id){ const n=DB.notifications.find(x=>x.id===id); if(n){ n.read=true; await persist(); updateBellBadges(); } }
+async function markAllNotifRead(){ DB.notifications.filter(n=>n.employeeId===currentUser.id).forEach(n=>n.read=true); await persist(); closePanels(); updateBellBadges(); }
+
+function toggleAlertPanel(ev){
+  ev.stopPropagation();
+  const existing=document.getElementById('alert-panel'); if(existing){ existing.remove(); return; }
+  closePanels();
+  const scoped = currentUser.role==='super_admin' ? DB.securityAlerts : DB.securityAlerts.filter(a=>a.branchId===currentUser.branchId);
+  const list=scoped.slice(0,25);
+  const sevBadge=s=>s==='high'?'badge-danger':s==='medium'?'badge-warn':'badge-muted';
+  const html=`<div class="notif-panel" id="alert-panel" onclick="event.stopPropagation()">
+    <div class="notif-head"><b>التنبيهات الأمنية</b></div>
+    ${list.length?list.map(a=>`<div class="notif-item ${a.acknowledged?'':'unread'}"><div class="t">${alertTypeLabel(a.type)} <span class="badge ${sevBadge(a.severity)}">${a.severity==='high'?'خطورة عالية':a.severity==='medium'?'متوسطة':'منخفضة'}</span></div><div class="b">${esc(a.detail)}${a.username?' — '+esc(a.username):''}</div><div class="d">${timeAgo(a.createdAt)} ${a.acknowledged?'':'<button class=\"btn btn-ghost btn-sm\" style=\"padding:2px 8px;margin-right:6px;\" onclick=\"ackAlert(\'' + a.id + '\')\">تأكيد</button>'}</div></div>`).join(''):`<div class="notif-empty">لا توجد تنبيهات أمنية 🎉</div>`}
+  </div>`;
+  document.querySelector('.topbar-right').insertAdjacentHTML('beforeend',html);
+  setTimeout(()=>document.addEventListener('click',closePanels,{once:true}),0);
+}
+function alertTypeLabel(t){ return { failed_login:'محاولة دخول فاشلة', account_locked:'قفل حساب', session_takeover:'تسجيل دخول من جهاز آخر', device_mismatch:'جهاز غير معتمد', permission_violation:'محاولة تجاوز صلاحيات', duplicate_attendance:'محاولة تكرار بصمة' }[t] || t; }
+async function ackAlert(id){ const a=DB.securityAlerts.find(x=>x.id===id); if(a){ a.acknowledged=true; await persist(); toggleAlertPanel({stopPropagation(){}}); toggleAlertPanel({stopPropagation(){}}); updateBellBadges(); } }
+
+function openChangePassword(){
+  openModal('تغيير كلمة المرور', `
+    <div class="field"><label>كلمة المرور الجديدة</label><input id="np1" type="password"></div>
+    <div class="field"><label>تأكيد كلمة المرور</label><input id="np2" type="password"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="submitChangePassword()">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function submitChangePassword(){
+  const p1=document.getElementById('np1').value, p2=document.getElementById('np2').value;
+  if(!p1||p1.length<4){ toast('كلمة المرور قصيرة جدًا','error'); return; }
+  if(p1!==p2){ toast('كلمتا المرور غير متطابقتين','error'); return; }
+  const emp=DB.employees.find(e=>e.id===currentUser.id);
+  const cred=await makeCredential(p1); emp.salt=cred.salt; emp.passwordHash=cred.passwordHash;
+  logAudit('تغيير كلمة مرور','غيّر '+emp.name+' كلمة مروره الخاصة');
+  await persist(); closeModal(); toast('تم تغيير كلمة المرور','success');
+}
+
+/* ---------------- toast / modal / icons ---------------- */
+function toast(msg,type){ const wrap=document.getElementById('toast-wrap'); const el=document.createElement('div'); el.className='toast'+(type?' toast-'+type:''); el.textContent=msg; wrap.appendChild(el); requestAnimationFrame(()=>el.classList.add('show')); setTimeout(()=>{el.classList.remove('show'); setTimeout(()=>el.remove(),300);},2800); }
+function openModal(title,bodyHtml){ document.getElementById('modal-title').textContent=title; document.getElementById('modal-body').innerHTML=bodyHtml; document.getElementById('modal-backdrop').classList.remove('hidden'); }
+function closeModal(){ document.getElementById('modal-backdrop').classList.add('hidden'); document.getElementById('modal-body').innerHTML=''; }
+function icon(name){
+  const P={ grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>',
+    users:'<circle cx="9" cy="7" r="4"/><path d="M17 11a4 4 0 010 8"/><path d="M1 21v-1a4 4 0 014-4h4a4 4 0 014 4v1"/>',
+    clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>', cal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/>',
+    check:'<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12l3 3 5-6"/>', cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+    alert:'<path d="M12 2L2 20h20L12 2z"/><path d="M12 9v5M12 17h.01"/>', file:'<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/>',
+    gear:'<circle cx="12" cy="12" r="3"/><path d="M4 12h2m12 0h2M12 4v2m0 12v2M6.3 6.3l1.4 1.4m8.6 8.6l1.4 1.4M17.7 6.3l-1.4 1.4M7.7 16.3l-1.4 1.4"/>',
+    logout:'<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+    refresh:'<path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.5 9a9 9 0 0114.8-3.4L23 10M1 14l4.7 4.4A9 9 0 0020.5 15"/>',
+    menu:'<path d="M3 6h18M3 12h18M3 18h18"/>', plus:'<path d="M12 5v14M5 12h14"/>', key:'<circle cx="8" cy="15" r="4"/><path d="M10.5 12.5L20 3M20 3v5M20 3h-5"/>',
+    check2:'<path d="M20 6L9 17l-5-5"/>', shield:'<path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/>',
+    pin:'<path d="M12 21s7-6.5 7-12a7 7 0 10-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+    list:'<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>',
+    leaf:'<path d="M5 21c7 0 13-6 13-13V5h-3C8 5 3 11 3 18v3z"/>', bell:'<path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/>'
+  };
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(P[name]||'')+'</svg>';
+}
+
+/* ---------------- scoping helpers ---------------- */
+function scopedEmployees(){
+  if(currentUser.role==='super_admin') return activeBranchFilter ? DB.employees.filter(e=>e.branchId===activeBranchFilter) : DB.employees.slice();
+  if(currentUser.role==='branch_admin') return DB.employees.filter(e=>e.branchId===currentUser.branchId);
+  return [currentUser];
+}
+function scopedStaffIds(){ return new Set(scopedEmployees().filter(e=>e.role==='employee').map(e=>e.id)); }
+function activeEmployees(){ return DB.employees.filter(e=>e.active!==false); }
+function scopedActiveStaff(){ return scopedEmployees().filter(e=>e.active!==false && e.role==='employee'); }
+function canManage(targetEmp){
+  if(currentUser.role==='super_admin') return true;
+  if(currentUser.role==='branch_admin') return targetEmp.branchId===currentUser.branchId && targetEmp.role==='employee';
+  return false;
+}
+
+/* ---------------- router ---------------- */
+function mountView(){
+  const map={ dashboard:renderAdminDashboard, employees:renderEmployees, branches:renderBranches, attendance:renderAttendanceAdmin,
+    schedules:renderSchedulesAdmin, tasks:renderTasksAdmin, leaves:renderLeavesAdmin, transactions:renderTransactionsAdmin,
+    disciplinary:renderDisciplinaryAdmin, payroll:renderPayroll, security:renderSecurity, audit:renderAudit, settings:renderSettings,
+    'emp-dashboard':renderEmpDashboard, 'emp-clock':renderEmpClock, 'emp-schedule':renderEmpSchedule, 'emp-tasks':renderEmpTasks,
+    'emp-leave':renderEmpLeave, 'emp-salary':renderEmpSalary, 'emp-attendance':renderEmpAttendance, 'emp-disciplinary':renderEmpDisciplinary, 'emp-summary':renderEmpSummary };
+  const fn=map[view]||renderAdminDashboard;
+  document.getElementById('view-content').innerHTML=fn();
+  updateBellBadges();
+}
+
+/* ============================================================
+   PAYROLL CALC (shared)
+   ============================================================ */
+function computeEmployeeMonth(employeeId,month){
+  const emp=DB.employees.find(e=>e.id===employeeId)||{};
+  const base=Number(emp.monthlySalary)||0;
+  const txs=DB.transactions.filter(t=>t.employeeId===employeeId && t.date && t.date.slice(0,7)===month && t.status==='موافق عليه');
+  const overtime=txs.filter(t=>t.type==='إضافي').reduce((s,t)=>s+Number(t.amount||0),0);
+  const advances=txs.filter(t=>t.type==='سلفة').reduce((s,t)=>s+Number(t.amount||0),0);
+  const deductions=txs.filter(t=>t.type==='خصم').reduce((s,t)=>s+Number(t.amount||0),0);
+  const penalties=DB.disciplinary.filter(d=>d.employeeId===employeeId && d.date && d.date.slice(0,7)===month).reduce((s,d)=>s+Number(d.penaltyAmount||0),0);
+  const net=base+overtime-advances-deductions-penalties;
+  const closing=DB.payrollClosings.find(p=>p.employeeId===employeeId && p.month===month);
+  return { employeeId, name:emp.name||'', base, overtime, advances, deductions, penalties, net, closed:!!closing, closing };
+}
+function isOnApprovedLeave(employeeId,dateStr){ return DB.leaveRequests.some(l=>l.employeeId===employeeId && l.status==='موافق عليها' && dateStr>=l.fromDate && dateStr<=l.toDate); }
+function suggestOvertimeHours(employeeId,month){
+  const atts=DB.attendance.filter(a=>a.employeeId===employeeId && a.date.slice(0,7)===month && a.clockIn && a.clockOut);
+  const actual=atts.reduce((s,a)=>s+hoursBetween(a.clockIn,a.clockOut),0);
+  const scheds=DB.schedules.filter(s=>s.employeeId===employeeId && s.date.slice(0,7)===month && s.shiftStart && s.shiftEnd);
+  const planned=scheds.reduce((s,sh)=>s+hoursBetween(sh.shiftStart,sh.shiftEnd),0);
+  return Math.max(0,Math.round((actual-planned)*100)/100);
+}
+function absentDaysInMonth(employeeId,month){
+  const [y,m]=month.split('-').map(Number); const daysInMonth=new Date(y,m,0).getDate();
+  const out=[];
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr=month+'-'+pad(d); if(dateStr>=todayISO()) break;
+    const sh=DB.schedules.find(s=>s.employeeId===employeeId && s.date===dateStr);
+    if(!sh) continue;
+    const att=DB.attendance.find(a=>a.employeeId===employeeId && a.date===dateStr && a.clockIn);
+    if(att) continue;
+    if(isOnApprovedLeave(employeeId,dateStr)) continue;
+    out.push(dateStr);
+  }
+  return out;
+}
+async function generateAutoAbsenceDeductions(employeeId,month){
+  const emp=DB.employees.find(e=>e.id===employeeId); if(!emp) return;
+  const absences=absentDaysInMonth(employeeId,month);
+  const allowed=DB.settings.allowedUnpaidAbsences||0;
+  const excess=absences.slice(allowed);
+  const dailyRate=Math.round((Number(emp.monthlySalary)||0)/30);
+  excess.forEach(dateStr=>{
+    const already=DB.transactions.find(t=>t.employeeId===employeeId && t.isAuto && t.autoRef==='absence:'+dateStr);
+    if(already) return;
+    DB.transactions.push({ id:uid(), employeeId, type:'خصم', amount:dailyRate, date:dateStr, reason:'خصم غياب تلقائي بدون بصمة أو إجازة معتمدة', status:'موافق عليه', month, isAuto:true, autoRef:'absence:'+dateStr });
+  });
+}
+async function autoClosePendingPayrolls(){
+  const day=DB.settings.payrollAutoCloseDay||3;
+  if(new Date().getDate()<day) return;
+  const monthToClose=prevMonthKey(currentMonthKey());
+  const staff=DB.employees.filter(e=>e.role==='employee' && e.active!==false);
+  let closedAny=false;
+  for(const e of staff){
+    const existing=DB.payrollClosings.find(p=>p.employeeId===e.id && p.month===monthToClose);
+    if(existing) continue;
+    await generateAutoAbsenceDeductions(e.id,monthToClose);
+    const c=computeEmployeeMonth(e.id,monthToClose);
+    DB.payrollClosings.push({ id:uid(), employeeId:e.id, month:monthToClose, baseSalary:c.base, overtimeTotal:c.overtime, advancesTotal:c.advances, deductionsTotal:c.deductions, penaltiesTotal:c.penalties, netPay:c.net, closedAt:new Date().toISOString(), closedBy:'تقفيل تلقائي', status:'مقفول', auto:true });
+    pushNotification(e.id,'تم قفل راتبك تلقائيًا','راتب '+monthLabel(monthToClose)+' — الصافي: '+fmtMoney(c.net),'payroll');
+    logAudit('تقفيل تلقائي للمرتب','قُفل راتب '+e.name+' لشهر '+monthLabel(monthToClose)+' تلقائيًا');
+    closedAny=true;
+  }
+  if(closedAny) await persist();
+}
+
+/* ============================================================
+   ADMIN: DASHBOARD
+   ============================================================ */
+function renderAdminDashboard(){
+  const emps=scopedActiveStaff();
+  const today=todayISO();
+  const todayAtt=DB.attendance.filter(a=>a.date===today && scopedStaffIds().has(a.employeeId));
+  const pendingAdv=DB.transactions.filter(t=>t.type==='سلفة' && t.status==='معلق' && scopedStaffIds().has(t.employeeId));
+  const pendingLeave=DB.leaveRequests.filter(l=>l.status==='معلقة' && scopedStaffIds().has(l.employeeId));
+  const month=currentMonthKey();
+  const monthTotals=emps.reduce((s,e)=>s+computeEmployeeMonth(e.id,month).net,0);
+  const dueTasks=DB.tasks.filter(t=>t.status!=='مكتملة' && t.dueDate===today && scopedStaffIds().has(t.employeeId));
+  const scopedAlerts=currentUser.role==='super_admin'?DB.securityAlerts:DB.securityAlerts.filter(a=>a.branchId===currentUser.branchId);
+  const unresolvedAlerts=scopedAlerts.filter(a=>!a.acknowledged);
+  const branchNote = currentUser.role==='super_admin' ? (activeBranchFilter?('فرع: '+esc((DB.branches.find(b=>b.id===activeBranchFilter)||{}).name||'')):'كل الفروع') : (DB.branches.find(b=>b.id===currentUser.branchId)||{}).name;
+
+  const attRows=emps.map(e=>{
+    const rec=todayAtt.find(a=>a.employeeId===e.id);
+    let badge = !rec?'<span class="badge badge-muted">لم يسجل</span>' : (rec.clockIn&&!rec.clockOut?'<span class="badge badge-success">في العمل</span>':'<span class="badge badge-muted">انصرف</span>');
+    return `<tr><td>${esc(e.name)}</td><td class="num">${rec&&rec.clockIn?esc(rec.clockIn):'—'}</td><td class="num">${rec&&rec.clockOut?esc(rec.clockOut):'—'}</td><td>${badge}</td></tr>`;
+  }).join('');
+  const advRows=pendingAdv.length?pendingAdv.map(t=>{ const e=DB.employees.find(x=>x.id===t.employeeId);
+    return `<tr><td>${esc(e?e.name:'')}</td><td class="num">${fmtMoney(t.amount)}</td><td>${esc(t.reason||'')}</td>
+      <td class="icon-btn-row"><button class="btn btn-success btn-sm" onclick="setTxStatus('${t.id}','موافق عليه')">قبول</button><button class="btn btn-danger btn-sm" onclick="setTxStatus('${t.id}','مرفوض')">رفض</button></td></tr>`;
+  }).join(''):`<tr><td colspan="4" style="text-align:center;color:var(--ink-soft);padding:18px;">لا توجد طلبات معلقة</td></tr>`;
+
+  return `
+  <div class="page-header"><div><h2>أهلًا، ${esc(currentUser.name)} 👋</h2><p>${fmtDateAr(today)} · ${branchNote}</p></div></div>
+  <div class="kpi-grid">
+    <div class="kpi-card"><div class="kpi-label">الموظفون النشطون</div><div class="kpi-value">${emps.length}</div></div>
+    <div class="kpi-card success"><div class="kpi-label">حضروا اليوم</div><div class="kpi-value">${todayAtt.filter(a=>a.clockIn).length} <span style="font-size:13px;color:var(--ink-soft);">/ ${emps.length}</span></div></div>
+    <div class="kpi-card warn"><div class="kpi-label">سلف وإجازات معلقة</div><div class="kpi-value">${pendingAdv.length+pendingLeave.length}</div></div>
+    <div class="kpi-card ${unresolvedAlerts.length?'danger':'success'}"><div class="kpi-label">تنبيهات أمنية غير محلولة</div><div class="kpi-value">${unresolvedAlerts.length}</div></div>
+    <div class="kpi-card success"><div class="kpi-label">صافي مرتبات ${monthLabel(month)} (تقديري)</div><div class="kpi-value" style="font-size:18px;">${fmtMoney(monthTotals)}</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card"><div class="section-title">${icon('clock')} حضور اليوم</div>
+      <div class="table-wrap"><table><thead><tr><th>الموظف</th><th>حضور</th><th>انصراف</th><th>الحالة</th></tr></thead><tbody>${attRows}</tbody></table></div></div>
+    <div class="card"><div class="section-title">${icon('cash')} طلبات سلف معلقة</div>
+      <div class="table-wrap"><table><thead><tr><th>الموظف</th><th>المبلغ</th><th>السبب</th><th>إجراء</th></tr></thead><tbody>${advRows}</tbody></table></div></div>
+  </div>
+  ${unresolvedAlerts.length?`<div style="height:16px;"></div><div class="card"><div class="section-title">${icon('shield')} آخر التنبيهات الأمنية</div>
+    ${unresolvedAlerts.slice(0,5).map(a=>`<div class="summary-block"><span>${alertTypeLabel(a.type)} ${a.username?'— '+esc(a.username):''}</span><span style="color:var(--ink-soft);font-size:12.5px;">${timeAgo(a.createdAt)}</span></div>`).join('')}
+    <button class="btn btn-ghost btn-sm" style="margin-top:10px;" onclick="goto('security')">عرض الكل</button></div>`:''}`;
+}
+async function setTxStatus(id,status){
+  const t=DB.transactions.find(x=>x.id===id); if(!t) return;
+  const emp=DB.employees.find(e=>e.id===t.employeeId);
+  if(currentUser.role==='branch_admin' && emp && emp.branchId!==currentUser.branchId){ toast('لا تملك صلاحية على هذا الفرع','error'); return; }
+  t.status=status; logAudit('تحديث حالة حركة مالية',(status==='موافق عليه'?'قبول':'رفض')+' '+t.type+' لـ '+(emp?emp.name:'')+' بقيمة '+t.amount);
+  if(emp) pushNotification(emp.id, status==='موافق عليه'?'تمت الموافقة على طلبك':'تم رفض طلبك', t.type+' بقيمة '+fmtMoney(t.amount)+(t.reason?' — '+t.reason:''),'transaction');
+  await persist(); render(); toast('تم التحديث','success');
+}
+
+/* ============================================================
+   ADMIN: BRANCHES (super_admin only)
+   ============================================================ */
+function renderBranches(){
+  if(currentUser.role!=='super_admin') return `<div class="empty-state">هذه الصفحة مخصصة للمدير العام فقط</div>`;
+  const rows=DB.branches.map(b=>{
+    const count=DB.employees.filter(e=>e.branchId===b.id && e.active!==false).length;
+    return `<tr><td><b>${esc(b.name)}</b></td><td>${esc(b.address||'—')}</td><td class="num">${b.lat?b.lat.toFixed(5)+', '+b.lng.toFixed(5):'غير محدد'}</td><td class="num">${b.radius} م</td><td class="num">${count}</td>
+      <td class="icon-btn-row"><button class="btn btn-ghost btn-sm" onclick="openBranchForm('${b.id}')">تعديل</button>${count===0?`<button class="btn btn-danger btn-sm" onclick="deleteBranch('${b.id}')">حذف</button>`:''}</td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>الفروع</h2><p>إدارة فروع الشركة ومواقعها الجغرافية (نطاق البصمة)</p></div>
+    <button class="btn btn-primary" onclick="openBranchForm()">${icon('plus')} إضافة فرع</button></div>
+  <div class="table-wrap"><table><thead><tr><th>الفرع</th><th>العنوان</th><th>الموقع</th><th>نطاق البصمة</th><th>الموظفون</th><th>إجراءات</th></tr></thead>
+  <tbody>${rows||`<tr><td colspan="6" class="empty-state">لا توجد فروع بعد</td></tr>`}</tbody></table></div>`;
+}
+function openBranchForm(id){
+  const b=id?DB.branches.find(x=>x.id===id):null;
+  openModal(b?'تعديل فرع':'إضافة فرع جديد', `
+    <div class="field"><label>اسم الفرع</label><input id="bf-name" value="${b?esc(b.name):''}"></div>
+    <div class="field"><label>العنوان</label><input id="bf-addr" value="${b?esc(b.address||''):''}"></div>
+    <div class="field-row"><div class="field"><label>خط العرض</label><input id="bf-lat" type="number" step="any" value="${b&&b.lat!=null?b.lat:''}" readonly></div><div class="field"><label>خط الطول</label><input id="bf-lng" type="number" step="any" value="${b&&b.lng!=null?b.lng:''}" readonly></div></div>
+    <button type="button" class="btn btn-ghost" onclick="captureBranchLocation()">${icon('pin')} استخدام موقعي الحالي</button>
+    <div class="field" style="margin-top:12px;"><label>نطاق السماح بالأمتار</label><input id="bf-radius" type="number" value="${b?b.radius:100}"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveBranch(${b?`'${b.id}'`:'null'})">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+function captureBranchLocation(){
+  if(!navigator.geolocation){ toast('المتصفح لا يدعم تحديد الموقع','error'); return; }
+  toast('جارٍ تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(pos=>{ document.getElementById('bf-lat').value=pos.coords.latitude; document.getElementById('bf-lng').value=pos.coords.longitude; toast('تم تحديد الموقع، لا تنس الحفظ','success'); },
+    err=>toast('تعذر تحديد الموقع: '+err.message,'error'), { enableHighAccuracy:true, timeout:12000 });
+}
+async function saveBranch(id){
+  const name=document.getElementById('bf-name').value.trim(); if(!name){ toast('اسم الفرع مطلوب','error'); return; }
+  const address=document.getElementById('bf-addr').value.trim();
+  const lat=document.getElementById('bf-lat').value, lng=document.getElementById('bf-lng').value;
+  const radius=Number(document.getElementById('bf-radius').value)||100;
+  if(id){ const b=DB.branches.find(x=>x.id===id); Object.assign(b,{name,address,lat:lat?Number(lat):null,lng:lng?Number(lng):null,radius}); logAudit('تعديل فرع',name); }
+  else{ DB.branches.push({id:uid(),name,address,lat:lat?Number(lat):null,lng:lng?Number(lng):null,radius}); logAudit('إضافة فرع',name); }
+  await persist(); closeModal(); render(); toast('تم الحفظ','success');
+}
+async function deleteBranch(id){
+  if(!confirm('حذف هذا الفرع؟')) return;
+  DB.branches=DB.branches.filter(b=>b.id!==id); logAudit('حذف فرع',id); await persist(); render();
+}
+
+/* ============================================================
+   ADMIN: EMPLOYEES
+   ============================================================ */
+function renderEmployees(){
+  const list=scopedEmployees();
+  const rows=list.map(e=>{
+    const branch=DB.branches.find(b=>b.id===e.branchId);
+    const roleLabel=e.role==='super_admin'?'مدير عام':e.role==='branch_admin'?'مدير فرع':esc(e.position||'موظف');
+    return `<tr>
+      <td><b>${esc(e.name)}</b></td><td>${esc(e.username)}</td><td>${roleLabel}</td><td>${branch?esc(branch.name):'—'}</td>
+      <td class="num">${fmtMoney(e.monthlySalary)}</td>
+      <td>${e.active===false?'<span class="badge badge-danger">معطل</span>':'<span class="badge badge-success">نشط</span>'}</td>
+      <td class="icon-btn-row">
+        ${canManage(e)?`<button class="btn btn-ghost btn-sm" onclick="openEmployeeForm('${e.id}')">تعديل</button><button class="btn ${e.active===false?'btn-success':'btn-danger'} btn-sm" onclick="toggleEmployeeActive('${e.id}')">${e.active===false?'تفعيل':'تعطيل'}</button>${e.registeredDevice?`<button class="btn btn-ghost btn-sm" onclick="resetDevice('${e.id}')">إعادة تعيين الجهاز</button>`:''}`:'<span style="color:var(--ink-soft);font-size:12px;">بدون صلاحية</span>'}
+      </td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>الموظفون</h2><p>إدارة حسابات الدخول والبيانات الوظيفية والصلاحيات</p></div>
+    <button class="btn btn-primary" onclick="openEmployeeForm()">${icon('plus')} إضافة موظف</button></div>
+  <div class="table-wrap"><table><thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>الدور</th><th>الفرع</th><th>الراتب</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+  <tbody>${rows||`<tr><td colspan="7" class="empty-state">لا يوجد موظفون بعد</td></tr>`}</tbody></table></div>`;
+}
+function openEmployeeForm(id){
+  const e=id?DB.employees.find(x=>x.id===id):null;
+  if(e && !canManage(e)){ toast('لا تملك صلاحية تعديل هذا الحساب','error'); return; }
+  const isSuper=currentUser.role==='super_admin';
+  const roleOptions = isSuper ? ['employee','branch_admin','super_admin'] : ['employee'];
+  const roleLabels={employee:'موظف',branch_admin:'مدير فرع',super_admin:'مدير عام'};
+  const branchOptions = DB.branches.map(b=>`<option value="${b.id}" ${e&&e.branchId===b.id?'selected':(!e&&currentUser.branchId===b.id?'selected':'')}>${esc(b.name)}</option>`).join('');
+  openModal(e?'تعديل بيانات موظف':'إضافة موظف جديد', `
+    <div class="field-row"><div class="field"><label>الاسم الكامل</label><input id="ef-name" value="${e?esc(e.name):''}"></div><div class="field"><label>الوظيفة</label><input id="ef-pos" value="${e?esc(e.position||''):''}" placeholder="باريستا / كاشير..."></div></div>
+    <div class="field-row"><div class="field"><label>اسم المستخدم</label><input id="ef-user" value="${e?esc(e.username):''}"></div><div class="field"><label>كلمة المرور ${e?'(اتركها فارغة للإبقاء عليها)':''}</label><input id="ef-pass" type="text" placeholder="${e?'••••••••':'كلمة مرور جديدة'}"></div></div>
+    <div class="field-row">
+      <div class="field"><label>الصلاحية</label><select id="ef-role" ${!isSuper?'disabled':''}>${roleOptions.map(r=>`<option value="${r}" ${e&&e.role===r?'selected':''}>${roleLabels[r]}</option>`).join('')}</select></div>
+      <div class="field"><label>الفرع</label><select id="ef-branch" ${!isSuper?'disabled':''}>${branchOptions}</select></div>
+    </div>
+    <div class="field-row"><div class="field"><label>الراتب الشهري</label><input id="ef-salary" type="number" value="${e?e.monthlySalary:''}" placeholder="0"></div><div class="field"><label>رصيد الإجازات السنوي</label><input id="ef-leave" type="number" value="${e?e.annualLeaveBalance:DB.settings.defaultAnnualLeave}"></div></div>
+    <div class="field-row"><div class="field"><label>رقم الهاتف</label><input id="ef-phone" value="${e?esc(e.phone||''):''}"></div><div class="field"><label>تاريخ التعيين</label><input id="ef-hire" type="date" value="${e?e.hireDate:todayISO()}"></div></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveEmployee(${e?`'${e.id}'`:'null'})">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function saveEmployee(id){
+  const name=document.getElementById('ef-name').value.trim();
+  const username=document.getElementById('ef-user').value.trim();
+  const pass=document.getElementById('ef-pass').value;
+  const role = currentUser.role==='super_admin' ? document.getElementById('ef-role').value : 'employee';
+  const branchId = currentUser.role==='super_admin' ? document.getElementById('ef-branch').value : currentUser.branchId;
+  const salary=Number(document.getElementById('ef-salary').value)||0;
+  const annualLeaveBalance=Number(document.getElementById('ef-leave').value)||0;
+  const pos=document.getElementById('ef-pos').value.trim();
+  const phone=document.getElementById('ef-phone').value.trim();
+  const hire=document.getElementById('ef-hire').value||todayISO();
+  if(!name||!username){ toast('الاسم واسم المستخدم مطلوبان','error'); return; }
+  const dup=DB.employees.find(e=>e.username===username && e.id!==id);
+  if(dup){ toast('اسم المستخدم مستخدم بالفعل','error'); return; }
+  if(id){
+    const e=DB.employees.find(x=>x.id===id);
+    if(!canManage(e)){ toast('لا تملك صلاحية','error'); return; }
+    Object.assign(e,{name,username,role,branchId:role==='super_admin'?null:branchId,monthlySalary:salary,position:pos,phone,hireDate:hire,annualLeaveBalance});
+    if(pass){ const cred=await makeCredential(pass); e.salt=cred.salt; e.passwordHash=cred.passwordHash; }
+    logAudit('تعديل موظف',name);
+  }else{
+    if(!pass){ toast('كلمة المرور مطلوبة للموظف الجديد','error'); return; }
+    const cred=await makeCredential(pass);
+    DB.employees.push({ id:uid(), username, salt:cred.salt, passwordHash:cred.passwordHash, name, role, branchId:role==='super_admin'?null:branchId, position:pos, phone, monthlySalary:salary, hireDate:hire, active:true, annualLeaveBalance, registeredDevice:null, activeSessionToken:null, activeSessionAt:null, failedAttempts:0, lockedUntil:null });
+    logAudit('إضافة موظف',name);
+  }
+  await persist(); closeModal(); render(); toast('تم الحفظ','success');
+}
+async function toggleEmployeeActive(id){
+  const e=DB.employees.find(x=>x.id===id); if(!e||!canManage(e)) return;
+  e.active = e.active===false?true:false;
+  if(e.active===false) e.activeSessionToken=null;
+  logAudit(e.active===false?'تعطيل موظف':'تفعيل موظف',e.name);
+  await persist(); render();
+}
+async function resetDevice(id){
+  const e=DB.employees.find(x=>x.id===id); if(!e||!canManage(e)) return;
+  if(!confirm('إعادة تعيين الجهاز المعتمد لـ '+e.name+'؟ سيتم قبول أول جهاز يستخدمه بعد ذلك كجهازه الجديد.')) return;
+  e.registeredDevice=null; logAudit('إعادة تعيين جهاز',e.name); await persist(); render(); toast('تم إعادة التعيين','success');
+}
+
+/* ============================================================
+   ADMIN: ATTENDANCE
+   ============================================================ */
+function renderAttendanceAdmin(){
+  if(!attFilters.month) attFilters.month=currentMonthKey();
+  const scope=scopedEmployees();
+  let list=DB.attendance.filter(a=>a.date && a.date.slice(0,7)===attFilters.month && scope.find(e=>e.id===a.employeeId));
+  if(attFilters.employee!=='all') list=list.filter(a=>a.employeeId===attFilters.employee);
+  list=list.sort((a,b)=>b.date.localeCompare(a.date));
+  const rows=list.map(a=>{
+    const e=DB.employees.find(x=>x.id===a.employeeId);
+    const hrs=a.clockIn&&a.clockOut?hoursBetween(a.clockIn,a.clockOut):0;
+    const zoneIn=a.clockInLoc?(a.clockInLoc.withinZone===false?'<span class="badge badge-warn">خارج النطاق</span>':a.clockInLoc.withinZone===true?'<span class="badge badge-success">داخل النطاق</span>':'<span class="badge badge-muted">غير محدد</span>'):'—';
+    return `<tr><td>${fmtDateShort(a.date)}</td><td>${esc(e?e.name:'—')}</td><td class="num">${a.clockIn||'—'}</td><td class="num">${a.clockOut||'—'}</td><td>${zoneIn}</td><td class="num">${hrs||'—'}</td>
+      <td class="icon-btn-row"><button class="btn btn-ghost btn-sm" onclick="openAttendanceForm('${a.id}')">تعديل</button><button class="btn btn-danger btn-sm" onclick="deleteAttendance('${a.id}')">حذف</button></td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>الحضور والانصراف</h2><p>سجل بصمات الموظفين الموثّقة بموقع GPS وجهاز مسجَّل لكل موظف</p></div>
+    <button class="btn btn-primary" onclick="openAttendanceForm()">${icon('plus')} تسجيل يدوي</button></div>
+  <div class="table-toolbar"><div class="filters">
+    <select onchange="attFilters.employee=this.value;mountView()"><option value="all">كل الموظفين</option>${scope.map(e=>`<option value="${e.id}" ${attFilters.employee===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select>
+    <input type="month" value="${attFilters.month}" onchange="attFilters.month=this.value;mountView()">
+  </div></div>
+  <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الموظف</th><th>حضور</th><th>انصراف</th><th>الموقع</th><th>الساعات</th><th>إجراءات</th></tr></thead>
+  <tbody>${rows||`<tr><td colspan="7" class="empty-state">لا توجد سجلات لهذا الشهر</td></tr>`}</tbody></table></div>`;
+}
+function openAttendanceForm(id){
+  const a=id?DB.attendance.find(x=>x.id===id):null;
+  const emps=scopedActiveStaff();
+  openModal(a?'تعديل سجل حضور':'تسجيل حضور يدوي', `
+    <div class="warn-box">التسجيل اليدوي لا يمر عبر التحقق من الموقع أو الجهاز، ويُسجَّل في سجل العمليات باسمك.</div>
+    <div class="field"><label>الموظف</label><select id="af-emp">${emps.map(e=>`<option value="${e.id}" ${a&&a.employeeId===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>التاريخ</label><input id="af-date" type="date" value="${a?a.date:todayISO()}"></div>
+    <div class="field-row"><div class="field"><label>وقت الحضور</label><input id="af-in" type="time" value="${a&&a.clockIn?a.clockIn:''}"></div><div class="field"><label>وقت الانصراف</label><input id="af-out" type="time" value="${a&&a.clockOut?a.clockOut:''}"></div></div>
+    <div class="field"><label>سبب التسجيل اليدوي</label><input id="af-notes" value="${a?esc(a.notes||''):''}" placeholder="مثال: عطل في الهاتف"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveAttendanceManual(${a?`'${a.id}'`:'null'})">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function saveAttendanceManual(id){
+  const employeeId=document.getElementById('af-emp').value, date=document.getElementById('af-date').value;
+  const clockIn=document.getElementById('af-in').value||null, clockOut=document.getElementById('af-out').value||null;
+  const notes=document.getElementById('af-notes').value.trim();
+  if(!date){ toast('التاريخ مطلوب','error'); return; }
+  if(id){ const a=DB.attendance.find(x=>x.id===id); Object.assign(a,{employeeId,date,clockIn,clockOut,notes}); }
+  else{ DB.attendance.push({ id:uid(), employeeId, date, clockIn, clockOut, clockInLoc:null, clockOutLoc:null, notes, manualBy:currentUser.name }); }
+  logAudit('تسجيل حضور يدوي',(DB.employees.find(e=>e.id===employeeId)||{}).name+' — '+date);
+  await persist(); closeModal(); render(); toast('تم الحفظ','success');
+}
+async function deleteAttendance(id){ if(!confirm('حذف هذا السجل؟')) return; DB.attendance=DB.attendance.filter(a=>a.id!==id); logAudit('حذف سجل حضور',id); await persist(); render(); }
+
+/* ============================================================
+   ADMIN: SCHEDULES
+   ============================================================ */
+function renderSchedulesAdmin(){
+  if(!scheduleWeekStart) scheduleWeekStart=getWeekStart(todayISO());
+  const days=[...Array(7)].map((_,i)=>addDays(scheduleWeekStart,i));
+  const emps=scopedActiveStaff(); const today=todayISO();
+  const rows=emps.map(e=>{
+    const cells=days.map(d=>{
+      const sh=DB.schedules.find(s=>s.employeeId===e.id && s.date===d);
+      const cls='sched-cell'+(d===today?' today':'')+(sh?'':' empty');
+      const inner=sh?`<span class="st">${esc(sh.shiftType||'')}</span><span>${sh.shiftStart||''}${sh.shiftEnd?'-'+sh.shiftEnd:''}</span>`:'+';
+      return `<td><div class="${cls}" onclick="openShiftForm('${e.id}','${d}')">${inner}</div></td>`;
+    }).join('');
+    return `<tr><td style="text-align:right;font-weight:700;white-space:nowrap;">${esc(e.name)}</td>${cells}</tr>`;
+  }).join('');
+  const headCells=days.map(d=>`<th>${weekdayAr(d)}<br><span style="font-weight:500;">${fmtDateShort(d)}</span></th>`).join('');
+  return `
+  <div class="page-header"><div><h2>الجداول الأسبوعية</h2><p>وزّع الشيفتات على مدار الأسبوع لكل موظف</p></div>
+    <button class="btn btn-ghost" onclick="copyPrevWeek()">نسخ الأسبوع السابق</button></div>
+  <div class="week-nav"><button class="btn btn-ghost btn-sm" onclick="scheduleWeekStart=addDays(scheduleWeekStart,-7);mountView()">‹ السابق</button><span class="label">${fmtDateShort(days[0])} — ${fmtDateShort(days[6])}</span><button class="btn btn-ghost btn-sm" onclick="scheduleWeekStart=addDays(scheduleWeekStart,7);mountView()">التالي ›</button></div>
+  <div class="table-wrap"><table class="sched-grid"><thead><tr><th>الموظف</th>${headCells}</tr></thead><tbody>${rows||`<tr><td colspan="8" class="empty-state">لا يوجد موظفون نشطون</td></tr>`}</tbody></table></div>`;
+}
+function openShiftForm(employeeId,date){
+  const sh=DB.schedules.find(s=>s.employeeId===employeeId && s.date===date);
+  const e=DB.employees.find(x=>x.id===employeeId);
+  openModal(`شيفت ${e?e.name:''} — ${fmtDateAr(date)}`, `
+    <div class="field-row"><div class="field"><label>من الساعة</label><input id="sf-start" type="time" value="${sh?sh.shiftStart||'':''}"></div><div class="field"><label>إلى الساعة</label><input id="sf-end" type="time" value="${sh?sh.shiftEnd||'':''}"></div></div>
+    <div class="field"><label>نوع الشيفت</label><select id="sf-type">${['صباحي','مسائي','فتح','قفل','يوم كامل','إجازة'].map(t=>`<option ${sh&&sh.shiftType===t?'selected':''}>${t}</option>`).join('')}</select></div>
+    <div class="field"><label>ملاحظات</label><input id="sf-notes" value="${sh?esc(sh.notes||''):''}"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveShift('${employeeId}','${date}')">حفظ</button>${sh?`<button class="btn btn-danger" onclick="deleteShift('${sh.id}')">حذف الشيفت</button>`:''}<button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function saveShift(employeeId,date){
+  const shiftStart=document.getElementById('sf-start').value, shiftEnd=document.getElementById('sf-end').value, shiftType=document.getElementById('sf-type').value, notes=document.getElementById('sf-notes').value.trim();
+  let sh=DB.schedules.find(s=>s.employeeId===employeeId && s.date===date);
+  if(sh) Object.assign(sh,{shiftStart,shiftEnd,shiftType,notes}); else{ sh={ id:uid(), employeeId, date, shiftStart, shiftEnd, shiftType, notes }; DB.schedules.push(sh); }
+  pushNotification(employeeId,'تحديث في جدولك','تم تحديد شيفت '+fmtDateAr(date)+': '+shiftType+(shiftStart?' '+shiftStart+(shiftEnd?'-'+shiftEnd:''):''),'schedule');
+  logAudit('تعديل شيفت',(DB.employees.find(e=>e.id===employeeId)||{}).name+' — '+date);
+  await persist(); closeModal(); render();
+}
+async function deleteShift(id){ DB.schedules=DB.schedules.filter(s=>s.id!==id); await persist(); closeModal(); render(); }
+async function copyPrevWeek(){
+  const prevStart=addDays(scheduleWeekStart,-7); const prevDays=[...Array(7)].map((_,i)=>addDays(prevStart,i)); let count=0;
+  prevDays.forEach((pd,i)=>{ const nd=addDays(scheduleWeekStart,i);
+    DB.schedules.filter(s=>s.date===pd).forEach(s=>{ if(!DB.schedules.find(x=>x.employeeId===s.employeeId && x.date===nd)){ DB.schedules.push({ id:uid(), employeeId:s.employeeId, date:nd, shiftStart:s.shiftStart, shiftEnd:s.shiftEnd, shiftType:s.shiftType, notes:s.notes }); count++; } });
+  });
+  await persist(); render(); toast('تم نسخ '+count+' شيفت','success');
+}
+
+/* ============================================================
+   ADMIN: TASKS
+   ============================================================ */
+function taskStatusOf(t){ if(t.status==='مكتملة') return 'مكتملة'; if(t.dueDate && t.dueDate<todayISO()) return 'متأخرة'; return 'قيد التنفيذ'; }
+function renderTasksAdmin(){
+  const emps=scopedActiveStaff();
+  let list=DB.tasks.filter(t=>emps.find(e=>e.id===t.employeeId));
+  if(taskFilters.employee!=='all') list=list.filter(t=>t.employeeId===taskFilters.employee);
+  if(taskFilters.status!=='all') list=list.filter(t=>taskStatusOf(t)===taskFilters.status);
+  list.sort((a,b)=>(a.dueDate||'').localeCompare(b.dueDate||''));
+  const rows=list.map(t=>{ const e=DB.employees.find(x=>x.id===t.employeeId); const st=taskStatusOf(t);
+    const badgeCls=st==='مكتملة'?'badge-success':st==='متأخرة'?'badge-danger':'badge-warn';
+    return `<tr><td><b>${esc(t.title)}</b>${t.description?`<div style="color:var(--ink-soft);font-size:12px;margin-top:2px;">${esc(t.description)}</div>`:''}</td><td>${esc(e?e.name:'')}</td><td>${esc(t.frequency)}</td><td class="num">${t.dueDate?fmtDateShort(t.dueDate):'—'}</td><td><span class="badge ${badgeCls}">${st}</span></td>
+      <td class="icon-btn-row">${st!=='مكتملة'?`<button class="btn btn-success btn-sm" onclick="markTaskDone('${t.id}')">إنهاء</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteTask('${t.id}')">حذف</button></td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>المهام</h2><p>توزيع المهام اليومية والأسبوعية والشهرية على الموظفين</p></div>
+    <button class="btn btn-primary" onclick="openTaskForm()">${icon('plus')} مهمة جديدة</button></div>
+  <div class="table-toolbar"><div class="filters">
+    <select onchange="taskFilters.employee=this.value;mountView()"><option value="all">كل الموظفين</option>${emps.map(e=>`<option value="${e.id}" ${taskFilters.employee===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select>
+    <select onchange="taskFilters.status=this.value;mountView()"><option value="all">كل الحالات</option><option ${taskFilters.status==='قيد التنفيذ'?'selected':''}>قيد التنفيذ</option><option ${taskFilters.status==='مكتملة'?'selected':''}>مكتملة</option><option ${taskFilters.status==='متأخرة'?'selected':''}>متأخرة</option></select>
+  </div></div>
+  <div class="table-wrap"><table><thead><tr><th>المهمة</th><th>الموظف</th><th>التكرار</th><th>الاستحقاق</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="empty-state">لا توجد مهام</td></tr>`}</tbody></table></div>`;
+}
+function openTaskForm(){
+  const emps=scopedActiveStaff();
+  openModal('مهمة جديدة', `
+    <div class="field"><label>الموظف</label><select id="tf-emp"><option value="__all__">جميع الموظفين النشطين${currentUser.role==='super_admin'&&activeBranchFilter?' بالفرع المحدد':''}</option>${emps.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>عنوان المهمة</label><input id="tf-title" placeholder="مثال: تنظيف ماكينة الإسبريسو"></div>
+    <div class="field"><label>تفاصيل (اختياري)</label><textarea id="tf-desc" rows="2"></textarea></div>
+    <div class="field-row"><div class="field"><label>التكرار</label><select id="tf-freq"><option>مرة واحدة</option><option>يومية</option><option>أسبوعية</option><option>شهرية</option></select></div><div class="field"><label>تاريخ الاستحقاق</label><input id="tf-due" type="date" value="${todayISO()}"></div></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveTask()">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function saveTask(){
+  const empSel=document.getElementById('tf-emp').value, title=document.getElementById('tf-title').value.trim(), description=document.getElementById('tf-desc').value.trim(), frequency=document.getElementById('tf-freq').value, dueDate=document.getElementById('tf-due').value;
+  if(!title){ toast('عنوان المهمة مطلوب','error'); return; }
+  const targets=empSel==='__all__'?scopedActiveStaff().map(e=>e.id):[empSel];
+  targets.forEach(employeeId=>{ DB.tasks.push({ id:uid(), employeeId, title, description, frequency, dueDate, assignedDate:todayISO(), status:'قيد التنفيذ', completedAt:null });
+    pushNotification(employeeId,'مهمة جديدة',title+(dueDate?' — الاستحقاق: '+fmtDateShort(dueDate):''),'task'); });
+  logAudit('إسناد مهمة',title+' لعدد '+targets.length+' موظف');
+  await persist(); closeModal(); render(); toast('تم إضافة المهمة','success');
+}
+async function markTaskDone(id){ const t=DB.tasks.find(x=>x.id===id); if(!t) return; t.status='مكتملة'; t.completedAt=new Date().toISOString(); await persist(); render(); }
+async function deleteTask(id){ if(!confirm('حذف هذه المهمة؟')) return; DB.tasks=DB.tasks.filter(t=>t.id!==id); await persist(); render(); }
+
+/* ============================================================
+   ADMIN: LEAVES
+   ============================================================ */
+function renderLeavesAdmin(){
+  const emps=scopedEmployees();
+  let list=DB.leaveRequests.filter(l=>emps.find(e=>e.id===l.employeeId));
+  if(leaveFilters.employee!=='all') list=list.filter(l=>l.employeeId===leaveFilters.employee);
+  if(leaveFilters.status!=='all') list=list.filter(l=>l.status===leaveFilters.status);
+  list.sort((a,b)=>b.requestedAt.localeCompare(a.requestedAt));
+  const statusBadge=s=>s==='موافق عليها'?'badge-success':s==='مرفوضة'?'badge-danger':'badge-warn';
+  const rows=list.map(l=>{ const e=DB.employees.find(x=>x.id===l.employeeId);
+    return `<tr><td>${esc(e?e.name:'')}</td><td class="num">${fmtDateShort(l.fromDate)} — ${fmtDateShort(l.toDate)}</td><td class="num">${l.days}</td><td>${esc(l.reason||'')}</td><td><span class="badge ${statusBadge(l.status)}">${esc(l.status)}</span></td>
+      <td class="icon-btn-row">${l.status==='معلقة'?`<button class="btn btn-success btn-sm" onclick="decideLeave('${l.id}','موافق عليها')">قبول</button><button class="btn btn-danger btn-sm" onclick="decideLeave('${l.id}','مرفوضة')">رفض</button>`:''}</td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>الإجازات</h2><p>طلبات إجازات الموظفين وأرصدتهم السنوية</p></div></div>
+  <div class="table-toolbar"><div class="filters">
+    <select onchange="leaveFilters.employee=this.value;mountView()"><option value="all">كل الموظفين</option>${emps.map(e=>`<option value="${e.id}" ${leaveFilters.employee===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select>
+    <select onchange="leaveFilters.status=this.value;mountView()"><option value="all">كل الحالات</option><option ${leaveFilters.status==='معلقة'?'selected':''}>معلقة</option><option ${leaveFilters.status==='موافق عليها'?'selected':''}>موافق عليها</option><option ${leaveFilters.status==='مرفوضة'?'selected':''}>مرفوضة</option></select>
+  </div></div>
+  <div class="table-wrap"><table><thead><tr><th>الموظف</th><th>الفترة</th><th>الأيام</th><th>السبب</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="empty-state">لا توجد طلبات إجازة</td></tr>`}</tbody></table></div>`;
+}
+async function decideLeave(id,status){
+  const l=DB.leaveRequests.find(x=>x.id===id); if(!l) return;
+  const e=DB.employees.find(x=>x.id===l.employeeId);
+  if(currentUser.role==='branch_admin' && e && e.branchId!==currentUser.branchId){ toast('لا تملك صلاحية','error'); return; }
+  l.status=status; l.decidedBy=currentUser.name; l.decidedAt=new Date().toISOString();
+  if(status==='موافق عليها' && e){ e.annualLeaveBalance=Math.max(0,(e.annualLeaveBalance||0)-l.days); }
+  pushNotification(l.employeeId, status==='موافق عليها'?'تمت الموافقة على إجازتك':'تم رفض طلب إجازتك', fmtDateShort(l.fromDate)+' — '+fmtDateShort(l.toDate),'leave');
+  logAudit('قرار إجازة',(e?e.name:'')+' — '+status);
+  await persist(); render(); toast('تم التحديث','success');
+}
+
+/* ============================================================
+   ADMIN: TRANSACTIONS
+   ============================================================ */
+function renderTransactionsAdmin(){
+  if(!txFilters.month) txFilters.month=currentMonthKey();
+  const emps=scopedEmployees();
+  let list=DB.transactions.filter(t=>t.date && t.date.slice(0,7)===txFilters.month && emps.find(e=>e.id===t.employeeId));
+  if(txFilters.employee!=='all') list=list.filter(t=>t.employeeId===txFilters.employee);
+  if(txFilters.type!=='all') list=list.filter(t=>t.type===txFilters.type);
+  list.sort((a,b)=>b.date.localeCompare(a.date));
+  const typeBadge=t=>t==='سلفة'?'badge-warn':t==='خصم'?'badge-danger':'badge-success';
+  const statusBadge=s=>s==='موافق عليه'?'badge-success':s==='مرفوض'?'badge-danger':'badge-muted';
+  const rows=list.map(t=>{ const e=DB.employees.find(x=>x.id===t.employeeId);
+    return `<tr><td>${fmtDateShort(t.date)}</td><td>${esc(e?e.name:'')}</td><td><span class="badge ${typeBadge(t.type)}">${esc(t.type)}</span>${t.isAuto?' <span class="badge badge-info">تلقائي</span>':''}</td><td class="num">${fmtMoney(t.amount)}</td><td>${esc(t.reason||'')}</td><td><span class="badge ${statusBadge(t.status)}">${esc(t.status)}</span></td>
+      <td class="icon-btn-row">${t.status==='معلق'?`<button class="btn btn-success btn-sm" onclick="setTxStatus('${t.id}','موافق عليه')">قبول</button><button class="btn btn-danger btn-sm" onclick="setTxStatus('${t.id}','مرفوض')">رفض</button>`:''}<button class="btn btn-ghost btn-sm" onclick="deleteTx('${t.id}')">حذف</button></td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>السلف والخصومات والوقت الإضافي</h2><p>كل الحركات المالية الشهرية — تُحسب تلقائيًا ضمن تقفيل المرتب</p></div>
+    <button class="btn btn-primary" onclick="openTxForm()">${icon('plus')} إضافة حركة</button></div>
+  <div class="table-toolbar"><div class="filters">
+    <select onchange="txFilters.employee=this.value;mountView()"><option value="all">كل الموظفين</option>${emps.map(e=>`<option value="${e.id}" ${txFilters.employee===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select>
+    <select onchange="txFilters.type=this.value;mountView()"><option value="all">كل الأنواع</option><option ${txFilters.type==='سلفة'?'selected':''}>سلفة</option><option ${txFilters.type==='خصم'?'selected':''}>خصم</option><option ${txFilters.type==='إضافي'?'selected':''}>إضافي</option></select>
+    <input type="month" value="${txFilters.month}" onchange="txFilters.month=this.value;mountView()">
+  </div></div>
+  <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الموظف</th><th>النوع</th><th>المبلغ</th><th>السبب</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows||`<tr><td colspan="7" class="empty-state">لا توجد حركات لهذا الشهر</td></tr>`}</tbody></table></div>`;
+}
+function openTxForm(){
+  const emps=scopedActiveStaff();
+  openModal('إضافة حركة مالية', `
+    <div class="field"><label>الموظف</label><select id="xf-emp" onchange="updateTxRateHint()">${emps.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+    <div class="field"><label>النوع</label><select id="xf-type" onchange="toggleOvertimeHelper()"><option value="سلفة">سلفة</option><option value="خصم">خصم</option><option value="إضافي">وقت إضافي</option></select></div>
+    <div id="xf-ot-helper" class="hidden">
+      <div class="field-row"><div class="field"><label>عدد الساعات الإضافية</label><input id="xf-hours" type="number" oninput="calcOvertimeAmount()" placeholder="0"></div><div class="field"><label style="opacity:.001">.</label><button type="button" class="btn btn-ghost btn-sm" style="width:100%;" onclick="suggestHoursFromAttendance()">اقتراح من سجل الحضور</button></div></div>
+    </div>
+    <div class="field-row"><div class="field"><label>المبلغ</label><input id="xf-amount" type="number" placeholder="0"></div><div class="field"><label>التاريخ</label><input id="xf-date" type="date" value="${todayISO()}"></div></div>
+    <div class="field"><label>السبب / ملاحظات</label><input id="xf-reason"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveTx()">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+function toggleOvertimeHelper(){ document.getElementById('xf-ot-helper').classList.toggle('hidden',document.getElementById('xf-type').value!=='إضافي'); }
+function calcOvertimeAmount(){ const empId=document.getElementById('xf-emp').value; const e=DB.employees.find(x=>x.id===empId); const hours=Number(document.getElementById('xf-hours').value)||0; document.getElementById('xf-amount').value=Math.round(hours*hourlyRate(e)*(DB.settings.overtimeRate||1.5)); }
+function updateTxRateHint(){ if(document.getElementById('xf-type').value==='إضافي') calcOvertimeAmount(); }
+function suggestHoursFromAttendance(){ const empId=document.getElementById('xf-emp').value; const hrs=suggestOvertimeHours(empId,currentMonthKey()); document.getElementById('xf-hours').value=hrs; calcOvertimeAmount(); toast('تم اقتراح '+hrs+' ساعة بناءً على سجل هذا الشهر','success'); }
+async function saveTx(){
+  const employeeId=document.getElementById('xf-emp').value, type=document.getElementById('xf-type').value, amount=Number(document.getElementById('xf-amount').value)||0, date=document.getElementById('xf-date').value||todayISO(), reason=document.getElementById('xf-reason').value.trim();
+  if(amount<=0){ toast('أدخل مبلغًا صحيحًا','error'); return; }
+  DB.transactions.push({ id:uid(), employeeId, type, amount, date, reason, status:'موافق عليه', month:date.slice(0,7) });
+  const e=DB.employees.find(x=>x.id===employeeId);
+  pushNotification(employeeId, type==='خصم'?'تم تسجيل خصم':type==='إضافي'?'تمت إضافة وقت إضافي':'تمت إضافة سلفة', fmtMoney(amount)+(reason?' — '+reason:''),'transaction');
+  logAudit('إضافة حركة مالية',(e?e.name:'')+' — '+type+' '+amount);
+  await persist(); closeModal(); render(); toast('تم الحفظ','success');
+}
+async function deleteTx(id){ if(!confirm('حذف هذه الحركة؟')) return; DB.transactions=DB.transactions.filter(t=>t.id!==id); await persist(); render(); }
+
+/* ============================================================
+   ADMIN: DISCIPLINARY
+   ============================================================ */
+function renderDisciplinaryAdmin(){
+  const emps=scopedEmployees();
+  let list=DB.disciplinary.filter(d=>emps.find(e=>e.id===d.employeeId));
+  if(discFilters.employee!=='all') list=list.filter(d=>d.employeeId===discFilters.employee);
+  list.sort((a,b)=>b.date.localeCompare(a.date));
+  const rows=list.map(d=>{ const e=DB.employees.find(x=>x.id===d.employeeId);
+    return `<tr><td>${fmtDateShort(d.date)}</td><td>${esc(e?e.name:'')}</td><td><span class="badge badge-danger">${esc(d.type)}</span></td><td>${esc(d.description||'')}</td><td class="num">${d.penaltyAmount?fmtMoney(d.penaltyAmount):'—'}</td><td>${esc(d.issuedBy||'')}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="deleteDisc('${d.id}')">حذف</button></td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>الجزاءات التأديبية</h2><p>سجل المخالفات مع إمكانية خصم مالي يُطبَّق تلقائيًا في المرتب</p></div>
+    <button class="btn btn-primary" onclick="openDiscForm()">${icon('plus')} تسجيل جزاء</button></div>
+  <div class="table-toolbar"><div class="filters"><select onchange="discFilters.employee=this.value;mountView()"><option value="all">كل الموظفين</option>${emps.map(e=>`<option value="${e.id}" ${discFilters.employee===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select></div></div>
+  <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>الموظف</th><th>النوع</th><th>الوصف</th><th>قيمة الخصم</th><th>صدر بواسطة</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="7" class="empty-state">لا توجد جزاءات مسجلة</td></tr>`}</tbody></table></div>`;
+}
+function openDiscForm(){
+  const emps=scopedActiveStaff();
+  openModal('تسجيل جزاء تأديبي', `
+    <div class="field"><label>الموظف</label><select id="df-emp">${emps.map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select></div>
+    <div class="field-row"><div class="field"><label>نوع المخالفة</label><select id="df-type">${['تأخير عن الحضور','غياب بدون إذن','مخالفة أداء','مخالفة سلوك','مخالفة نظافة وسلامة غذائية','أخرى'].map(t=>`<option>${t}</option>`).join('')}</select></div><div class="field"><label>التاريخ</label><input id="df-date" type="date" value="${todayISO()}"></div></div>
+    <div class="field"><label>وصف الواقعة</label><textarea id="df-desc" rows="3"></textarea></div>
+    <div class="field"><label>قيمة الخصم من الراتب (اختياري)</label><input id="df-amount" type="number" placeholder="0"></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="saveDisc()">حفظ</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function saveDisc(){
+  const employeeId=document.getElementById('df-emp').value, type=document.getElementById('df-type').value, date=document.getElementById('df-date').value||todayISO(), description=document.getElementById('df-desc').value.trim(), penaltyAmount=Number(document.getElementById('df-amount').value)||0;
+  DB.disciplinary.push({ id:uid(), employeeId, date, type, description, penaltyAmount, issuedBy:currentUser.name });
+  pushNotification(employeeId,'تم تسجيل جزاء تأديبي', type+(penaltyAmount?' — خصم '+fmtMoney(penaltyAmount):''),'disciplinary');
+  logAudit('تسجيل جزاء',(DB.employees.find(e=>e.id===employeeId)||{}).name+' — '+type);
+  await persist(); closeModal(); render(); toast('تم تسجيل الجزاء','success');
+}
+async function deleteDisc(id){ if(!confirm('حذف هذا الجزاء؟')) return; DB.disciplinary=DB.disciplinary.filter(d=>d.id!==id); await persist(); render(); }
+
+/* ============================================================
+   ADMIN: PAYROLL
+   ============================================================ */
+function renderPayroll(){
+  if(!payrollMonth) payrollMonth=currentMonthKey();
+  const staff=scopedActiveStaff();
+  const rows=staff.map(e=>{ const c=computeEmployeeMonth(e.id,payrollMonth); const branch=DB.branches.find(b=>b.id===e.branchId);
+    return `<tr><td><b>${esc(e.name)}</b>${currentUser.role==='super_admin'&&!activeBranchFilter?`<div style="font-size:11px;color:var(--ink-soft);">${branch?esc(branch.name):''}</div>`:''}</td>
+      <td class="num">${fmtMoney(c.base)}</td><td class="num pos">${c.overtime?'+'+fmtMoney(c.overtime):'—'}</td><td class="num neg">${c.advances?'-'+fmtMoney(c.advances):'—'}</td><td class="num neg">${c.deductions?'-'+fmtMoney(c.deductions):'—'}</td><td class="num neg">${c.penalties?'-'+fmtMoney(c.penalties):'—'}</td>
+      <td class="num" style="font-weight:800;">${fmtMoney(c.net)}</td><td>${c.closed?(c.closing.auto?`<span class="badge badge-info">تلقائي</span>`:`<span class="badge badge-success">مقفول</span>`):`<span class="badge badge-muted">مفتوح</span>`}</td>
+      <td class="icon-btn-row no-print"><button class="btn btn-ghost btn-sm" onclick="viewPayrollDetail('${e.id}')">تفاصيل</button>${c.closed?`<button class="btn btn-danger btn-sm" onclick="reopenPayroll('${e.id}')">إعادة فتح</button>`:`<button class="btn btn-success btn-sm" onclick="closePayrollOne('${e.id}')">تقفيل</button>`}</td></tr>`;
+  }).join('');
+  const totalNet=staff.reduce((s,e)=>s+computeEmployeeMonth(e.id,payrollMonth).net,0);
+  return `
+  <div class="page-header"><div><h2>تقفيل المرتبات</h2><p>يُقفل النظام رواتب الشهر السابق تلقائيًا في اليوم ${DB.settings.payrollAutoCloseDay} من كل شهر، بعد احتساب خصومات الغياب تلقائيًا من البصمة</p></div>
+    <div class="icon-btn-row no-print"><button class="btn btn-ghost" onclick="window.print()">طباعة</button><button class="btn btn-primary" onclick="closePayrollAll()">تقفيل الشهر يدويًا</button></div></div>
+  <div class="table-toolbar no-print"><input type="month" value="${payrollMonth}" onchange="payrollMonth=this.value;mountView()">
+    <div class="kpi-card" style="padding:10px 18px;"><div class="kpi-label">إجمالي صافي مرتبات ${monthLabel(payrollMonth)}</div><div class="kpi-value" style="font-size:19px;">${fmtMoney(totalNet)}</div></div></div>
+  <div class="table-wrap"><table><thead><tr><th>الموظف</th><th>الأساسي</th><th>الإضافي</th><th>السلف</th><th>الخصومات</th><th>الجزاءات</th><th>الصافي</th><th>الحالة</th><th>إجراءات</th></tr></thead><tbody>${rows||`<tr><td colspan="9" class="empty-state">لا يوجد موظفون</td></tr>`}</tbody></table></div>`;
+}
+function viewPayrollDetail(employeeId){
+  const c=computeEmployeeMonth(employeeId,payrollMonth);
+  const txs=DB.transactions.filter(t=>t.employeeId===employeeId && t.date.slice(0,7)===payrollMonth && t.status==='موافق عليه');
+  const discs=DB.disciplinary.filter(d=>d.employeeId===employeeId && d.date.slice(0,7)===payrollMonth);
+  openModal('تفاصيل راتب — '+c.name, `
+    <div class="summary-block"><span>الراتب الأساسي</span><span class="num">${fmtMoney(c.base)}</span></div>
+    <div class="summary-block"><span>إجمالي الوقت الإضافي</span><span class="num pos">+${fmtMoney(c.overtime)}</span></div>
+    <div class="summary-block"><span>إجمالي السلف</span><span class="num neg">-${fmtMoney(c.advances)}</span></div>
+    <div class="summary-block"><span>إجمالي الخصومات</span><span class="num neg">-${fmtMoney(c.deductions)}</span></div>
+    <div class="summary-block"><span>إجمالي الجزاءات</span><span class="num neg">-${fmtMoney(c.penalties)}</span></div>
+    <div class="summary-block total"><span>الصافي</span><span class="num">${fmtMoney(c.net)}</span></div>
+    ${txs.length?`<h4 style="margin:16px 0 8px;">الحركات المالية</h4>`+txs.map(t=>`<div class="summary-block"><span>${esc(t.type)}${t.isAuto?' (تلقائي)':''} - ${esc(t.reason||'')}</span><span class="num">${fmtMoney(t.amount)}</span></div>`).join(''):''}
+    ${discs.length?`<h4 style="margin:16px 0 8px;">الجزاءات</h4>`+discs.map(d=>`<div class="summary-block"><span>${esc(d.type)}</span><span class="num">${fmtMoney(d.penaltyAmount)}</span></div>`).join(''):''}
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">إغلاق</button></div>`);
+}
+async function closePayrollOne(employeeId){
+  await generateAutoAbsenceDeductions(employeeId,payrollMonth);
+  const c=computeEmployeeMonth(employeeId,payrollMonth);
+  const existing=DB.payrollClosings.find(p=>p.employeeId===employeeId && p.month===payrollMonth);
+  const rec={ id:existing?existing.id:uid(), employeeId, month:payrollMonth, baseSalary:c.base, overtimeTotal:c.overtime, advancesTotal:c.advances, deductionsTotal:c.deductions, penaltiesTotal:c.penalties, netPay:c.net, closedAt:new Date().toISOString(), closedBy:currentUser.name, status:'مقفول', auto:false };
+  if(existing) Object.assign(existing,rec); else DB.payrollClosings.push(rec);
+  pushNotification(employeeId,'تم قفل راتبك','راتب '+monthLabel(payrollMonth)+' — الصافي: '+fmtMoney(c.net),'payroll');
+  logAudit('تقفيل راتب',c.name+' — '+monthLabel(payrollMonth));
+  await persist(); render(); toast('تم تقفيل راتب '+c.name,'success');
+}
+async function closePayrollAll(){
+  if(!confirm('تقفيل رواتب جميع الموظفين المعروضين لشهر '+monthLabel(payrollMonth)+'؟')) return;
+  for(const e of scopedActiveStaff()){ await generateAutoAbsenceDeductions(e.id,payrollMonth); const c=computeEmployeeMonth(e.id,payrollMonth);
+    const existing=DB.payrollClosings.find(p=>p.employeeId===e.id && p.month===payrollMonth);
+    const rec={ id:existing?existing.id:uid(), employeeId:e.id, month:payrollMonth, baseSalary:c.base, overtimeTotal:c.overtime, advancesTotal:c.advances, deductionsTotal:c.deductions, penaltiesTotal:c.penalties, netPay:c.net, closedAt:new Date().toISOString(), closedBy:currentUser.name, status:'مقفول', auto:false };
+    if(existing) Object.assign(existing,rec); else DB.payrollClosings.push(rec);
+    pushNotification(e.id,'تم قفل راتبك','راتب '+monthLabel(payrollMonth)+' — الصافي: '+fmtMoney(c.net),'payroll');
+  }
+  logAudit('تقفيل جماعي للمرتبات',monthLabel(payrollMonth));
+  await persist(); render(); toast('تم تقفيل الرواتب','success');
+}
+async function reopenPayroll(employeeId){
+  if(!confirm('إعادة فتح هذا الراتب للتعديل؟')) return;
+  DB.payrollClosings=DB.payrollClosings.filter(p=>!(p.employeeId===employeeId && p.month===payrollMonth));
+  logAudit('إعادة فتح راتب',(DB.employees.find(e=>e.id===employeeId)||{}).name+' — '+monthLabel(payrollMonth));
+  await persist(); render();
+}
+
+/* ============================================================
+   ADMIN: SECURITY & AUDIT
+   ============================================================ */
+function renderSecurity(){
+  const scoped=currentUser.role==='super_admin'?DB.securityAlerts:DB.securityAlerts.filter(a=>a.branchId===currentUser.branchId);
+  const rows=scoped.map(a=>{ const sevBadge=a.severity==='high'?'badge-danger':a.severity==='medium'?'badge-warn':'badge-muted';
+    return `<tr><td class="num">${new Date(a.createdAt).toLocaleString('ar-EG')}</td><td>${alertTypeLabel(a.type)}</td><td>${esc(a.username||'')}</td><td>${esc(a.detail)}</td><td><span class="badge ${sevBadge}">${a.severity==='high'?'عالية':a.severity==='medium'?'متوسطة':'منخفضة'}</span></td>
+      <td>${a.acknowledged?'<span class="badge badge-success">تم التأكيد</span>':`<button class="btn btn-ghost btn-sm" onclick="ackAlertRow('${a.id}')">تأكيد</button>`}</td></tr>`;
+  }).join('');
+  return `
+  <div class="page-header"><div><h2>التنبيهات الأمنية</h2><p>محاولات تسجيل دخول فاشلة، بصمات من أجهزة غير معتمدة، وجلسات مزدوجة</p></div></div>
+  <div class="table-wrap"><table><thead><tr><th>التوقيت</th><th>النوع</th><th>المستخدم</th><th>التفاصيل</th><th>الخطورة</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="6" class="empty-state">لا توجد تنبيهات أمنية 🎉</td></tr>`}</tbody></table></div>`;
+}
+async function ackAlertRow(id){ const a=DB.securityAlerts.find(x=>x.id===id); if(a){ a.acknowledged=true; await persist(); render(); } }
+function renderAudit(){
+  if(currentUser.role!=='super_admin') return `<div class="empty-state">هذه الصفحة مخصصة للمدير العام فقط</div>`;
+  const rows=DB.auditLog.slice(0,300).map(a=>`<tr><td class="num">${new Date(a.createdAt).toLocaleString('ar-EG')}</td><td>${esc(a.actorName)}</td><td>${esc(a.action)}</td><td>${esc(a.detail||'')}</td></tr>`).join('');
+  return `<div class="page-header"><div><h2>سجل العمليات</h2><p>كل الإجراءات الإدارية موثّقة بالوقت والمنفّذ</p></div></div>
+  <div class="table-wrap"><table><thead><tr><th>التوقيت</th><th>المستخدم</th><th>الإجراء</th><th>التفاصيل</th></tr></thead><tbody>${rows||`<tr><td colspan="4" class="empty-state">لا يوجد سجل بعد</td></tr>`}</tbody></table></div>`;
+}
+
+/* ============================================================
+   ADMIN: SETTINGS
+   ============================================================ */
+function renderSettings(){
+  const s=DB.settings;
+  const myBranch=DB.branches.find(b=>b.id===currentUser.branchId);
+  return `
+  <div class="page-header"><div><h2>الإعدادات</h2><p>سياسات النظام، والنسخ الاحتياطي، وملاحظات حول النموذج الأمني</p></div></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">${icon('gear')} سياسات عامة</div>
+      ${currentUser.role==='super_admin'?`<div class="field"><label>اسم الشركة</label><input id="st-company" value="${esc(s.companyName)}"></div>`:''}
+      <div class="field-row"><div class="field"><label>معامل الوقت الإضافي</label><input id="st-ot" type="number" step="0.1" value="${s.overtimeRate}"></div><div class="field"><label>سماحية التأخير (دقيقة)</label><input id="st-grace" type="number" value="${s.lateGraceMinutes}"></div></div>
+      ${currentUser.role==='super_admin'?`<div class="field-row"><div class="field"><label>أيام الغياب غير المخصومة شهريًا</label><input id="st-absences" type="number" value="${s.allowedUnpaidAbsences}"></div><div class="field"><label>يوم تقفيل المرتبات التلقائي</label><input id="st-closeday" type="number" min="1" max="28" value="${s.payrollAutoCloseDay}"></div></div>
+      <div class="field"><label>رصيد الإجازات السنوي الافتراضي</label><input id="st-leave" type="number" value="${s.defaultAnnualLeave}"></div>`:''}
+      <button class="btn btn-primary" onclick="saveGeneralSettings()">حفظ</button>
+    </div>
+    <div class="card">
+      ${currentUser.role==='branch_admin'?`
+      <div class="section-title">${icon('pin')} موقع فرعك</div>
+      <p style="color:var(--ink-soft);font-size:12.8px;">نطاق GPS المستخدم للتحقق من بصمة موظفي ${myBranch?esc(myBranch.name):'فرعك'}.</p>
+      <div class="field-row"><div class="field"><label>خط العرض</label><input id="mb-lat" type="number" step="any" value="${myBranch&&myBranch.lat!=null?myBranch.lat:''}" readonly></div><div class="field"><label>خط الطول</label><input id="mb-lng" type="number" step="any" value="${myBranch&&myBranch.lng!=null?myBranch.lng:''}" readonly></div></div>
+      <button type="button" class="btn btn-ghost" onclick="captureMyBranchLocation()">${icon('pin')} استخدام موقعي الحالي</button>
+      <div class="field" style="margin-top:12px;"><label>نطاق السماح بالأمتار</label><input id="mb-radius" type="number" value="${myBranch?myBranch.radius:100}"></div>
+      <button class="btn btn-primary" onclick="saveMyBranchLocation()">حفظ موقع الفرع</button>`
+      :`<div class="section-title">${icon('shield')} النموذج الأمني </div>
+      <div class="info-box" style="margin-bottom:10px;">
+             </div>
+      <div class="warn-box">
+       
+      </div>`}
+    </div>
+  </div>
+  <div style="height:16px;"></div>
+  <div class="card">
+    <div class="section-title">نسخة احتياطية</div>
+    <p style="color:var(--ink-soft);font-size:13px;">البيانات مخزّنة داخل مساحة تخزين هذه المحادثة. خذ نسخة احتياطية دوريًا خاصة قبل أي تعديل كبير.</p>
+    <div class="icon-btn-row"><button class="btn btn-ghost" onclick="exportBackup()">تنزيل نسخة احتياطية (JSON)</button>${currentUser.role==='super_admin'?`<label class="btn btn-ghost" style="cursor:pointer;">استيراد نسخة احتياطية<input type="file" accept="application/json" style="display:none" onchange="importBackup(event)"></label>`:''}</div>
+  </div>`;
+}
+async function saveGeneralSettings(){
+  if(currentUser.role==='super_admin'){
+    DB.settings.companyName=document.getElementById('st-company').value.trim()||'الشركة';
+    DB.settings.allowedUnpaidAbsences=Number(document.getElementById('st-absences').value)||0;
+    DB.settings.payrollAutoCloseDay=Math.min(28,Math.max(1,Number(document.getElementById('st-closeday').value)||3));
+    DB.settings.defaultAnnualLeave=Number(document.getElementById('st-leave').value)||21;
+  }
+  DB.settings.overtimeRate=Number(document.getElementById('st-ot').value)||1.5;
+  DB.settings.lateGraceMinutes=Number(document.getElementById('st-grace').value)||15;
+  logAudit('تعديل إعدادات عامة','');
+  await persist(); toast('تم الحفظ','success');
+}
+function captureMyBranchLocation(){
+  if(!navigator.geolocation){ toast('المتصفح لا يدعم تحديد الموقع','error'); return; }
+  toast('جارٍ تحديد موقعك...');
+  navigator.geolocation.getCurrentPosition(pos=>{ document.getElementById('mb-lat').value=pos.coords.latitude; document.getElementById('mb-lng').value=pos.coords.longitude; toast('تم تحديد الموقع، لا تنس الحفظ','success'); }, err=>toast('تعذر تحديد الموقع: '+err.message,'error'), { enableHighAccuracy:true, timeout:12000 });
+}
+async function saveMyBranchLocation(){
+  const b=DB.branches.find(x=>x.id===currentUser.branchId); if(!b){ toast('لا يوجد فرع مرتبط بحسابك','error'); return; }
+  const lat=document.getElementById('mb-lat').value, lng=document.getElementById('mb-lng').value;
+  b.lat=lat?Number(lat):null; b.lng=lng?Number(lng):null; b.radius=Number(document.getElementById('mb-radius').value)||100;
+  logAudit('تعديل موقع فرع',b.name);
+  await persist(); toast('تم حفظ موقع الفرع','success');
+}
+function exportBackup(){ const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='hhr-backup-'+todayISO()+'.json'; a.click(); URL.revokeObjectURL(url); }
+function importBackup(ev){
+  const file=ev.target.files[0]; if(!file) return; const reader=new FileReader();
+  reader.onload=async ()=>{ try{ const data=JSON.parse(reader.result); if(!data.employees) throw new Error('ملف غير صالح'); if(!confirm('سيتم استبدال كل البيانات الحالية. متابعة؟')) return; DB=data; logAudit('استيراد نسخة احتياطية',''); await persist(); render(); toast('تم الاستيراد بنجاح','success'); }catch(e){ toast('ملف غير صالح: '+e.message,'error'); } };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   EMPLOYEE VIEWS
+   ============================================================ */
+function myTodayShift(){ return DB.schedules.find(s=>s.employeeId===currentUser.id && s.date===todayISO()); }
+function myTodayAttendance(){ return DB.attendance.find(a=>a.employeeId===currentUser.id && a.date===todayISO()); }
+
+function renderEmpDashboard(){
+  const shift=myTodayShift(), att=myTodayAttendance();
+  const myTasks=DB.tasks.filter(t=>t.employeeId===currentUser.id && t.status!=='مكتملة');
+  const c=computeEmployeeMonth(currentUser.id,currentMonthKey());
+  return `
+  <div class="page-header"><div><h2>أهلًا، ${esc(currentUser.name)} 👋</h2><p>${fmtDateAr(todayISO())}</p></div></div>
+  <div class="kpi-grid">
+    <div class="kpi-card ${att&&att.clockIn&&!att.clockOut?'success':''}"><div class="kpi-label">حالة اليوم</div><div class="kpi-value" style="font-size:15.5px;">${att?(att.clockOut?'تم الانصراف':'في العمل منذ '+att.clockIn):'لم تسجل حضور بعد'}</div></div>
+    <div class="kpi-card"><div class="kpi-label">شيفت اليوم</div><div class="kpi-value" style="font-size:15.5px;">${shift?(shift.shiftType+' '+(shift.shiftStart||'')+(shift.shiftEnd?'-'+shift.shiftEnd:'')):'لا يوجد'}</div></div>
+    <div class="kpi-card warn"><div class="kpi-label">مهام غير منتهية</div><div class="kpi-value">${myTasks.length}</div></div>
+    <div class="kpi-card success"><div class="kpi-label">صافي راتب ${monthLabel(currentMonthKey())} (تقديري)</div><div class="kpi-value" style="font-size:17px;">${fmtMoney(c.net)}</div></div>
+  </div>
+  <div class="card"><div class="section-title">${icon('clock')} تسجيل سريع</div>
+    <p style="color:var(--ink-soft);font-size:13.3px;margin-bottom:14px;">لتسجيل حضورك أو انصرافك اليوم اذهب إلى «تسجيل الحضور». التسجيل يتم فقط من جهازك المعتمد وداخل نطاق فرعك.</p>
+    <button class="btn btn-primary" onclick="goto('emp-clock')">${icon('clock')} فتح صفحة تسجيل الحضور</button></div>`;
+}
+
+function renderEmpClock(){
+  const att=myTodayAttendance();
+  const branch=DB.branches.find(b=>b.id===currentUser.branchId);
+  let label='تسجيل حضور', disabled=false, mode='in';
+  if(att && att.clockIn && !att.clockOut){ label='تسجيل انصراف'; mode='out'; }
+  else if(att && att.clockIn && att.clockOut){ label='تم اليوم ✓'; disabled=true; mode='done'; }
+  const empRec=DB.employees.find(e=>e.id===currentUser.id);
+  const deviceNote = empRec&&empRec.registeredDevice ? 'هذا الجهاز مربوط بحسابك منذ '+fmtDateShort(empRec.registeredDevice.registeredAt.slice(0,10)) : 'سيتم تسجيل هذا الجهاز تلقائيًا كجهازك المعتمد عند أول بصمة.';
+  return `
+  <div class="page-header"><div><h2>تسجيل الحضور والانصراف</h2><p>${branch?esc(branch.name)+' — ':''}يتم التحقق من موقعك وجهازك المسجَّل عند كل تسجيل</p></div></div>
+  <div class="clock-page-grid">
+    <div class="card radar-card">
+      <div class="radar-wrap"><span class="radar-ring r1"></span><span class="radar-ring r2"></span><span class="radar-ring r3"></span>
+        <button class="radar-btn" id="clock-btn" onclick="handleClock('${mode}')" ${disabled?'disabled':''}><span id="radar-core-label">${label}</span></button></div>
+      <div class="clock-status-line" id="clock-status-line">${branch&&branch.lat?deviceNote:'لم يحدد المدير موقع الفرع بعد.'}</div>
+      <div class="clock-times"><div class="clock-time-item"><div class="t num">${att&&att.clockIn?att.clockIn:'—:—'}</div><div class="l">وقت الحضور</div></div><div class="clock-time-item"><div class="t num">${att&&att.clockOut?att.clockOut:'—:—'}</div><div class="l">وقت الانصراف</div></div></div>
+    </div>
+    <div class="card"><div class="section-title">آخر 7 أيام</div>${renderMiniAttendanceList()}</div>
+  </div>`;
+}
+function renderMiniAttendanceList(){
+  const days=[...Array(7)].map((_,i)=>addDays(todayISO(),-i));
+  return days.map(d=>{ const a=DB.attendance.find(x=>x.employeeId===currentUser.id && x.date===d); return `<div class="summary-block"><span>${weekdayAr(d)} ${fmtDateShort(d)}</span><span class="num">${a?((a.clockIn||'—')+' → '+(a.clockOut||'—')):'—'}</span></div>`; }).join('');
+}
+async function handleClock(mode){
+  if(mode==='done') return;
+  const btn=document.getElementById('clock-btn'), statusLine=document.getElementById('clock-status-line'), label=document.getElementById('radar-core-label');
+  await silentReload();
+  const emp=DB.employees.find(e=>e.id===currentUser.id);
+  const today=todayISO();
+  let existing=DB.attendance.find(x=>x.employeeId===currentUser.id && x.date===today);
+  if(mode==='in' && existing && existing.clockIn){ toast('تم تسجيل حضورك بالفعل اليوم الساعة '+existing.clockIn,'error'); render(); return; }
+  if(mode==='out' && existing && existing.clockOut){ toast('تم تسجيل انصرافك بالفعل اليوم الساعة '+existing.clockOut,'error'); render(); return; }
+  const currentSig=deviceSignature();
+  if(emp.registeredDevice && emp.registeredDevice.signature!==currentSig){
+    btn.classList.add('blocked'); label.textContent='جهاز غير معتمد ✕';
+    pushSecurityAlert('device_mismatch',{employeeId:emp.id,username:emp.username,branchId:emp.branchId,detail:'محاولة تسجيل '+(mode==='in'?'حضور':'انصراف')+' من جهاز غير مطابق للجهاز المسجَّل',severity:'high'});
+    pushNotification(emp.id,'تم حظر محاولة بصمة','هذا الجهاز غير مطابق لجهازك المسجَّل. تم إبلاغ الإدارة. تواصل مع المدير إذا كان لديك جهاز جديد.','security');
+    await persist();
+    toast('هذا ليس جهازك المسجَّل. تم إبلاغ الإدارة.','error');
+    setTimeout(()=>{ btn.classList.remove('blocked'); render(); },2500);
+    return;
+  }
+  if(!navigator.geolocation){ await proceedClock(mode,null,currentSig); return; }
+  btn.classList.add('scanning'); label.textContent='جارٍ تحديد الموقع...'; statusLine.textContent='';
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    btn.classList.remove('scanning');
+    const branch=DB.branches.find(b=>b.id===emp.branchId);
+    let withinZone=null, distance=null;
+    if(branch && branch.lat!=null && branch.lng!=null){
+      distance=Math.round(haversine(pos.coords.latitude,pos.coords.longitude,branch.lat,branch.lng));
+      withinZone=distance<=Number(branch.radius||100);
+      if(!withinZone){
+        const proceed=confirm('أنت على بعد '+distance+' متر من موقع العمل، خارج النطاق المسموح ('+branch.radius+' متر). هل تريد المتابعة والتسجيل على أي حال؟');
+        if(!proceed){ label.textContent=mode==='in'?'تسجيل حضور':'تسجيل انصراف'; return; }
+      }
+    }
+    await proceedClock(mode,{ lat:pos.coords.latitude, lng:pos.coords.longitude, distance, withinZone },currentSig);
+  }, async err=>{
+    btn.classList.remove('scanning'); label.textContent=mode==='in'?'تسجيل حضور':'تسجيل انصراف';
+    toast('تعذر تحديد الموقع: '+err.message,'error');
+  }, { enableHighAccuracy:true, timeout:12000 });
+}
+async function proceedClock(mode,loc,deviceSig){
+  await silentReload();
+  const emp=DB.employees.find(e=>e.id===currentUser.id);
+  if(!emp.registeredDevice){ emp.registeredDevice={ signature:deviceSig, registeredAt:new Date().toISOString() }; }
+  const today=todayISO();
+  let a=DB.attendance.find(x=>x.employeeId===currentUser.id && x.date===today);
+  if(mode==='in'){
+    if(a && a.clockIn){ toast('تم تسجيل حضورك بالفعل اليوم الساعة '+a.clockIn,'error'); render(); return; }
+    if(!a){ a={ id:uid(), employeeId:currentUser.id, date:today, clockIn:null, clockOut:null, clockInLoc:null, clockOutLoc:null, notes:'' }; DB.attendance.push(a); }
+    a.clockIn=nowHM(); a.clockInLoc=loc; a.deviceSig=deviceSig;
+    toast('تم تسجيل الحضور الساعة '+a.clockIn,'success');
+  }else if(mode==='out'){
+    if(!a || !a.clockIn){ toast('لم يتم تسجيل حضورك اليوم بعد','error'); render(); return; }
+    if(a.clockOut){ toast('تم تسجيل انصرافك بالفعل اليوم الساعة '+a.clockOut,'error'); render(); return; }
+    a.clockOut=nowHM(); a.clockOutLoc=loc;
+    toast('تم تسجيل الانصراف الساعة '+a.clockOut,'success');
+  }
+  await persist(); render();
+}
+
+function renderEmpSchedule(){
+  if(!myScheduleWeekStart) myScheduleWeekStart=getWeekStart(todayISO());
+  const days=[...Array(7)].map((_,i)=>addDays(myScheduleWeekStart,i));
+  const rows=days.map(d=>{ const sh=DB.schedules.find(s=>s.employeeId===currentUser.id && s.date===d);
+    return `<tr><td>${weekdayAr(d)}</td><td class="num">${fmtDateShort(d)}</td><td>${sh?esc(sh.shiftType):'—'}</td><td class="num">${sh&&sh.shiftStart?sh.shiftStart+(sh.shiftEnd?' - '+sh.shiftEnd:''):'—'}</td><td>${sh?esc(sh.notes||''):''}</td></tr>`; }).join('');
+  return `<div class="page-header"><div><h2>جدولي الأسبوعي</h2><p>مواعيد الشيفتات المحددة لك</p></div></div>
+  <div class="week-nav"><button class="btn btn-ghost btn-sm" onclick="myScheduleWeekStart=addDays(myScheduleWeekStart,-7);mountView()">‹ السابق</button><span class="label">${fmtDateShort(days[0])} — ${fmtDateShort(days[6])}</span><button class="btn btn-ghost btn-sm" onclick="myScheduleWeekStart=addDays(myScheduleWeekStart,7);mountView()">التالي ›</button></div>
+  <div class="table-wrap"><table><thead><tr><th>اليوم</th><th>التاريخ</th><th>نوع الشيفت</th><th>التوقيت</th><th>ملاحظات</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function renderEmpTasks(){
+  const mine=DB.tasks.filter(t=>t.employeeId===currentUser.id).sort((a,b)=>(a.dueDate||'').localeCompare(b.dueDate||''));
+  const rows=mine.map(t=>{ const st=taskStatusOf(t); const badgeCls=st==='مكتملة'?'badge-success':st==='متأخرة'?'badge-danger':'badge-warn';
+    return `<tr><td><b>${esc(t.title)}</b>${t.description?`<div style="color:var(--ink-soft);font-size:12px;">${esc(t.description)}</div>`:''}</td><td>${esc(t.frequency)}</td><td class="num">${t.dueDate?fmtDateShort(t.dueDate):'—'}</td><td><span class="badge ${badgeCls}">${st}</span></td><td>${st!=='مكتملة'?`<button class="btn btn-success btn-sm" onclick="markTaskDone('${t.id}')">${icon('check2')} إنهاء</button>`:'✓'}</td></tr>`; }).join('');
+  return `<div class="page-header"><div><h2>مهامي</h2><p>المهام الموزعة عليك</p></div></div>
+  <div class="table-wrap"><table><thead><tr><th>المهمة</th><th>التكرار</th><th>الاستحقاق</th><th>الحالة</th><th></th></tr></thead><tbody>${rows||`<tr><td colspan="5" class="empty-state">لا توجد مهام مسندة إليك</td></tr>`}</tbody></table></div>`;
+}
+
+function renderEmpLeave(){
+  const emp=DB.employees.find(e=>e.id===currentUser.id);
+  const mine=DB.leaveRequests.filter(l=>l.employeeId===currentUser.id).sort((a,b)=>b.requestedAt.localeCompare(a.requestedAt));
+  const statusBadge=s=>s==='موافق عليها'?'badge-success':s==='مرفوضة'?'badge-danger':'badge-warn';
+  const rows=mine.map(l=>`<tr><td class="num">${fmtDateShort(l.fromDate)} — ${fmtDateShort(l.toDate)}</td><td class="num">${l.days}</td><td>${esc(l.reason||'')}</td><td><span class="badge ${statusBadge(l.status)}">${esc(l.status)}</span></td></tr>`).join('');
+  return `<div class="page-header"><div><h2>إجازاتي</h2><p>رصيدك المتبقي: <b class="num">${emp?emp.annualLeaveBalance:0}</b> يوم</p></div>
+    <button class="btn btn-primary" onclick="openLeaveRequestForm()">${icon('plus')} طلب إجازة</button></div>
+  <div class="table-wrap"><table><thead><tr><th>الفترة</th><th>الأيام</th><th>السبب</th><th>الحالة</th></tr></thead><tbody>${rows||`<tr><td colspan="4" class="empty-state">لا توجد طلبات إجازة سابقة</td></tr>`}</tbody></table></div>`;
+}
+function openLeaveRequestForm(){
+  openModal('طلب إجازة', `
+    <div class="field-row"><div class="field"><label>من تاريخ</label><input id="lf-from" type="date" value="${todayISO()}"></div><div class="field"><label>إلى تاريخ</label><input id="lf-to" type="date" value="${todayISO()}"></div></div>
+    <div class="field"><label>السبب</label><textarea id="lf-reason" rows="2"></textarea></div>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="submitLeaveRequest()">إرسال الطلب</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function submitLeaveRequest(){
+  const fromDate=document.getElementById('lf-from').value, toDate=document.getElementById('lf-to').value, reason=document.getElementById('lf-reason').value.trim();
+  if(!fromDate||!toDate||toDate<fromDate){ toast('التواريخ غير صحيحة','error'); return; }
+  const days=Math.round((new Date(toDate)-new Date(fromDate))/86400000)+1;
+  DB.leaveRequests.push({ id:uid(), employeeId:currentUser.id, fromDate, toDate, days, reason, status:'معلقة', requestedAt:new Date().toISOString() });
+  logAudit('طلب إجازة',currentUser.name+' — '+fromDate+' إلى '+toDate);
+  await persist(); closeModal(); render(); toast('تم إرسال طلب الإجازة','success');
+}
+
+function renderEmpSalary(){
+  if(!salaryMonth) salaryMonth=currentMonthKey();
+  const c=computeEmployeeMonth(currentUser.id,salaryMonth);
+  const txs=DB.transactions.filter(t=>t.employeeId===currentUser.id && t.date.slice(0,7)===salaryMonth).sort((a,b)=>b.date.localeCompare(a.date));
+  return `<div class="page-header"><div><h2>راتبي</h2><p>تفاصيل الراتب الشهري والحركات المالية</p></div><button class="btn btn-primary" onclick="openRequestAdvance()">${icon('plus')} طلب سلفة</button></div>
+  <div class="table-toolbar no-print"><input type="month" value="${salaryMonth}" onchange="salaryMonth=this.value;mountView()"></div>
+  <div class="grid-2">
+    <div class="card"><div class="section-title">ملخص ${monthLabel(salaryMonth)} ${c.closed?'<span class="badge badge-success">مقفول</span>':'<span class="badge badge-muted">مفتوح</span>'}</div>
+      <div class="summary-block"><span>الراتب الأساسي</span><span class="num">${fmtMoney(c.base)}</span></div>
+      <div class="summary-block"><span>الوقت الإضافي</span><span class="num pos">+${fmtMoney(c.overtime)}</span></div>
+      <div class="summary-block"><span>السلف</span><span class="num neg">-${fmtMoney(c.advances)}</span></div>
+      <div class="summary-block"><span>الخصومات</span><span class="num neg">-${fmtMoney(c.deductions)}</span></div>
+      <div class="summary-block"><span>الجزاءات</span><span class="num neg">-${fmtMoney(c.penalties)}</span></div>
+      <div class="summary-block total"><span>صافي الراتب</span><span class="num">${fmtMoney(c.net)}</span></div></div>
+    <div class="card"><div class="section-title">الحركات المالية</div>
+      ${txs.length?txs.map(t=>`<div class="summary-block"><span>${fmtDateShort(t.date)} · ${esc(t.type)}${t.reason?' — '+esc(t.reason):''}</span><span class="num">${fmtMoney(t.amount)} <span class="badge ${t.status==='معلق'?'badge-warn':t.status==='مرفوض'?'badge-danger':'badge-success'}" style="margin-right:6px;">${esc(t.status)}</span></span></div>`).join(''):`<div class="empty-state">لا توجد حركات هذا الشهر</div>`}</div>
+  </div>`;
+}
+function openRequestAdvance(){
+  openModal('طلب سلفة', `<div class="field"><label>المبلغ</label><input id="ra-amount" type="number" placeholder="0"></div><div class="field"><label>السبب</label><textarea id="ra-reason" rows="2"></textarea></div>
+    <p style="color:var(--ink-soft);font-size:12.5px;">سيتم إرسال الطلب للمدير للموافقة قبل خصمه من الراتب.</p>
+    <div class="modal-actions"><button class="btn btn-primary" onclick="submitAdvanceRequest()">إرسال الطلب</button><button class="btn btn-ghost" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function submitAdvanceRequest(){
+  const amount=Number(document.getElementById('ra-amount').value)||0, reason=document.getElementById('ra-reason').value.trim();
+  if(amount<=0){ toast('أدخل مبلغًا صحيحًا','error'); return; }
+  DB.transactions.push({ id:uid(), employeeId:currentUser.id, type:'سلفة', amount, date:todayISO(), reason, status:'معلق', month:currentMonthKey() });
+  logAudit('طلب سلفة',currentUser.name+' — '+amount);
+  await persist(); closeModal(); render(); toast('تم إرسال طلب السلفة','success');
+}
+
+function renderEmpAttendance(){
+  if(!empAttMonth) empAttMonth=currentMonthKey();
+  const [y,m]=empAttMonth.split('-').map(Number); const daysInMonth=new Date(y,m,0).getDate(); const grace=DB.settings.lateGraceMinutes||15;
+  let present=0,lateCount=0,totalHours=0; const rows=[];
+  for(let d=1; d<=daysInMonth; d++){
+    const dateStr=empAttMonth+'-'+pad(d); if(dateStr>todayISO()) break;
+    const a=DB.attendance.find(x=>x.employeeId===currentUser.id && x.date===dateStr);
+    const sh=DB.schedules.find(s=>s.employeeId===currentUser.id && s.date===dateStr);
+    let status='—', cls='badge-muted';
+    if(a&&a.clockIn){ present++; let isLate=false; if(sh&&sh.shiftStart){ const start=timeToMinutes(sh.shiftStart), inT=timeToMinutes(a.clockIn); if(inT-start>grace) isLate=true; }
+      if(isLate){ status='متأخر'; cls='badge-warn'; lateCount++; } else { status='حاضر'; cls='badge-success'; }
+      if(a.clockOut) totalHours+=hoursBetween(a.clockIn,a.clockOut);
+    } else if(isOnApprovedLeave(currentUser.id,dateStr)){ status='إجازة'; cls='badge-info'; }
+    else if(sh){ status='غائب'; cls='badge-danger'; }
+    rows.push(`<tr><td>${weekdayAr(dateStr)}</td><td class="num">${fmtDateShort(dateStr)}</td><td class="num">${a&&a.clockIn?a.clockIn:'—'}</td><td class="num">${a&&a.clockOut?a.clockOut:'—'}</td><td><span class="badge ${cls}">${status}</span></td></tr>`);
+  }
+  return `<div class="page-header"><div><h2>سجل حضوري</h2><p>مراجعة الحضور والانصراف خلال الشهر</p></div></div>
+  <div class="table-toolbar"><input type="month" value="${empAttMonth}" onchange="empAttMonth=this.value;mountView()">
+    <div style="flex:1;display:flex;gap:10px;"><div class="kpi-card" style="flex:1;padding:10px 14px;"><div class="kpi-label">أيام الحضور</div><div class="kpi-value" style="font-size:17px;">${present}</div></div><div class="kpi-card warn" style="flex:1;padding:10px 14px;"><div class="kpi-label">أيام التأخير</div><div class="kpi-value" style="font-size:17px;">${lateCount}</div></div><div class="kpi-card" style="flex:1;padding:10px 14px;"><div class="kpi-label">إجمالي الساعات</div><div class="kpi-value" style="font-size:17px;">${Math.round(totalHours)}</div></div></div></div>
+  <div class="table-wrap"><table><thead><tr><th>اليوم</th><th>التاريخ</th><th>الحضور</th><th>الانصراف</th><th>الحالة</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+
+function renderEmpDisciplinary(){
+  const mine=DB.disciplinary.filter(d=>d.employeeId===currentUser.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const rows=mine.map(d=>`<tr><td>${fmtDateShort(d.date)}</td><td>${esc(d.type)}</td><td>${esc(d.description||'')}</td><td class="num">${d.penaltyAmount?fmtMoney(d.penaltyAmount):'—'}</td></tr>`).join('');
+  return `<div class="page-header"><div><h2>الجزاءات التأديبية</h2><p>سجلك الخاص بالمخالفات إن وجدت</p></div></div>
+  <div class="table-wrap"><table><thead><tr><th>التاريخ</th><th>النوع</th><th>الوصف</th><th>الخصم</th></tr></thead><tbody>${rows||`<tr><td colspan="4" class="empty-state">لا توجد جزاءات مسجلة — سجل نظيف 🎉</td></tr>`}</tbody></table></div>`;
+}
+
+function renderEmpSummary(){
+  if(!summaryMonth) summaryMonth=currentMonthKey();
+  const c=computeEmployeeMonth(currentUser.id,summaryMonth);
+  const [y,m]=summaryMonth.split('-').map(Number); const daysInMonth=new Date(y,m,0).getDate();
+  let present=0,lateCount=0,absentCount=0; const grace=DB.settings.lateGraceMinutes||15;
+  for(let d=1; d<=daysInMonth; d++){ const dateStr=summaryMonth+'-'+pad(d); if(dateStr>todayISO()) break;
+    const a=DB.attendance.find(x=>x.employeeId===currentUser.id && x.date===dateStr); const sh=DB.schedules.find(s=>s.employeeId===currentUser.id && s.date===dateStr);
+    if(a&&a.clockIn){ present++; if(sh&&sh.shiftStart){ const start=timeToMinutes(sh.shiftStart), inT=timeToMinutes(a.clockIn); if(inT-start>grace) lateCount++; } }
+    else if(sh && !isOnApprovedLeave(currentUser.id,dateStr)){ absentCount++; }
+  }
+  const myTasksAll=DB.tasks.filter(t=>t.employeeId===currentUser.id && t.assignedDate && t.assignedDate.slice(0,7)===summaryMonth);
+  const tasksDone=myTasksAll.filter(t=>t.status==='مكتملة').length;
+  const discCount=DB.disciplinary.filter(d=>d.employeeId===currentUser.id && d.date.slice(0,7)===summaryMonth).length;
+  return `<div class="page-header"><div><h2>مراجعة الشهر الكامل</h2><p>ملخص شامل لأدائك خلال ${monthLabel(summaryMonth)}</p></div><button class="btn btn-ghost no-print" onclick="window.print()">طباعة</button></div>
+  <div class="table-toolbar no-print"><input type="month" value="${summaryMonth}" onchange="summaryMonth=this.value;mountView()"></div>
+  <div class="kpi-grid">
+    <div class="kpi-card success"><div class="kpi-label">أيام الحضور</div><div class="kpi-value">${present}</div></div>
+    <div class="kpi-card warn"><div class="kpi-label">أيام التأخير</div><div class="kpi-value">${lateCount}</div></div>
+    <div class="kpi-card danger"><div class="kpi-label">أيام الغياب</div><div class="kpi-value">${absentCount}</div></div>
+    <div class="kpi-card"><div class="kpi-label">المهام المنجزة</div><div class="kpi-value">${tasksDone} <span style="font-size:12.5px;color:var(--ink-soft);">/ ${myTasksAll.length}</span></div></div>
+    <div class="kpi-card ${discCount?'danger':'success'}"><div class="kpi-label">الجزاءات</div><div class="kpi-value">${discCount}</div></div>
+  </div>
+  <div class="card"><div class="section-title">${icon('cash')} ملخص الراتب</div>
+    <div class="summary-block"><span>الراتب الأساسي</span><span class="num">${fmtMoney(c.base)}</span></div>
+    <div class="summary-block"><span>الوقت الإضافي</span><span class="num pos">+${fmtMoney(c.overtime)}</span></div>
+    <div class="summary-block"><span>السلف</span><span class="num neg">-${fmtMoney(c.advances)}</span></div>
+    <div class="summary-block"><span>الخصومات</span><span class="num neg">-${fmtMoney(c.deductions)}</span></div>
+    <div class="summary-block"><span>الجزاءات</span><span class="num neg">-${fmtMoney(c.penalties)}</span></div>
+    <div class="summary-block total"><span>الصافي</span><span class="num">${fmtMoney(c.net)}</span></div></div>`;
+}
+
+/* ---------------- boot ---------------- */
+boot();
+</script>
+</body>
+</html>
